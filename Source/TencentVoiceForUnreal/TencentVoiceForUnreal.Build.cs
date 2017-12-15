@@ -12,7 +12,28 @@ public class TencentVoiceForUnreal : ModuleRules
 
     private string ThirdPartyPath
     {
-        get { return Path.GetFullPath(Path.Combine(ModulePath, "TencentVoiceForUnreal/ThirdParty")); }
+        get { return Path.GetFullPath(Path.Combine(ModulePath, "TencentVoiceForUnreal", "../../ThirdParty")); }
+    }
+
+    private bool LoadThirdParty(ReadOnlyTargetRules Target)
+    {
+        bool isLibrarySupported = false;
+        if (Target.Platform == UnrealTargetPlatform.Win64) 
+        {
+            isLibrarySupported = true;
+
+            // Add Library Path 
+            PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "lib"));
+
+            //Add Static Libraries
+            PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.lib"));
+
+            //Add Dynamic Libraries
+            PublicDelayLoadDLLs.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.dll"));
+
+            RuntimeDependencies.Add(new RuntimeDependency(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.dll")));
+        }
+        return isLibrarySupported;
     }
 
 	public TencentVoiceForUnreal(ReadOnlyTargetRules Target) : base(Target)
@@ -21,9 +42,8 @@ public class TencentVoiceForUnreal : ModuleRules
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"TencentVoiceForUnreal/Public",
+				"TencentVoiceForUnreal/Public"
 				// ... add public include paths required here ...
-                Path.Combine(ThirdPartyPath,"include")
 			}
 			);
 				
@@ -32,7 +52,8 @@ public class TencentVoiceForUnreal : ModuleRules
 			new string[] {
 				"TencentVoiceForUnreal/Private",
 				// ... add other private include paths required here ...
-			}
+                Path.Combine(ThirdPartyPath,"include")
+            }
 			);
 			
 		
@@ -64,8 +85,6 @@ public class TencentVoiceForUnreal : ModuleRules
 			}
 			);
 
-        PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.lib"));
-        PublicDelayLoadDLLs.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.dll"));
-
+        LoadThirdParty(Target);
     }
 }
