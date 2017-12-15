@@ -1,17 +1,29 @@
 // Copyright 1998-2017 Epic Games, Inc. All Rights Reserved.
 
 using UnrealBuildTool;
+using System.IO;
 
 public class TencentVoiceForUnreal : ModuleRules
 {
+    private string ModulePath
+    {
+        get { return Path.GetDirectoryName(ModuleDirectory); }
+    }
+
+    private string ThirdPartyPath
+    {
+        get { return Path.GetFullPath(Path.Combine(ModulePath, "TencentVoiceForUnreal/ThirdParty")); }
+    }
+
 	public TencentVoiceForUnreal(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"TencentVoiceForUnreal/Public"
+				"TencentVoiceForUnreal/Public",
 				// ... add public include paths required here ...
+                Path.Combine(ThirdPartyPath,"include")
 			}
 			);
 				
@@ -51,5 +63,9 @@ public class TencentVoiceForUnreal : ModuleRules
 				// ... add any modules that your module loads dynamically here ...
 			}
 			);
-	}
+
+        PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.lib"));
+        PublicDelayLoadDLLs.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.dll"));
+
+    }
 }
