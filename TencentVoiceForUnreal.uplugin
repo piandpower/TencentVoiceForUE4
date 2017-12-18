@@ -18,7 +18,7 @@
     {
       "Name": "TencentVoiceForUnreal",
       "Type": "Runtime",
-      "LoadingPhase": "PreDefault"
+      "LoadingPhase": "Default"
     }
   ]
 }
