@@ -5,44 +5,14 @@ using System.IO;
 
 public class TencentVoiceForUnreal : ModuleRules
 {
-    private string ModulePath
-    {
-        get { return Path.GetDirectoryName(ModuleDirectory); }
-    }
-
-    private string ThirdPartyPath
-    {
-        get { return Path.GetFullPath(Path.Combine(ModulePath, "TencentVoiceForUnreal", "../../ThirdParty")); }
-    }
-
-    private bool LoadThirdParty(ReadOnlyTargetRules Target)
-    {
-        bool isLibrarySupported = false;
-        if (Target.Platform == UnrealTargetPlatform.Win64) 
-        {
-            isLibrarySupported = true;
-
-            // Add Library Path 
-            PublicLibraryPaths.Add(Path.Combine(ThirdPartyPath, "lib"));
-
-            //Add Static Libraries
-            PublicAdditionalLibraries.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.lib"));
-
-            //Add Dynamic Libraries
-            PublicDelayLoadDLLs.Add(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.dll"));
-
-            RuntimeDependencies.Add(new RuntimeDependency(Path.Combine(ThirdPartyPath, "lib", "GCloudVoice.dll")));
-        }
-        return isLibrarySupported;
-    }
-
 	public TencentVoiceForUnreal(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
 		
 		PublicIncludePaths.AddRange(
 			new string[] {
-				"TencentVoiceForUnreal/Public"
+				"TencentVoiceForUnreal/Public",
+                Path.Combine(ThirdPartyPath,"include")
 				// ... add public include paths required here ...
 			}
 			);
@@ -73,6 +43,7 @@ public class TencentVoiceForUnreal : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
+                "Projects"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
@@ -86,5 +57,35 @@ public class TencentVoiceForUnreal : ModuleRules
 			);
 
         LoadThirdParty(Target);
+    }
+
+    private string ThirdPartyPath
+    {
+        get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../ThirdParty/")); }
+    }
+
+    private bool LoadThirdParty(ReadOnlyTargetRules Target)
+    {
+        bool isLibrarySupported = false;
+        if (Target.Platform == UnrealTargetPlatform.Win64)
+        {
+            isLibrarySupported = true;
+
+            string LibPath = Path.Combine(ThirdPartyPath, "lib");
+            string DllPath = Path.Combine(ThirdPartyPath, "dll");
+            System.Console.WriteLine(Path.Combine(DllPath, "GCloudVoice.dll"));
+
+            // Add Library Path 
+            PublicLibraryPaths.Add(LibPath);
+
+            //Add Static Libraries
+            PublicAdditionalLibraries.Add("GCloudVoice.lib");
+
+            //Add Dynamic Libraries
+            PublicDelayLoadDLLs.Add("GCloudVoice.dll");
+
+            RuntimeDependencies.Add(new RuntimeDependency(Path.Combine(DllPath, "GCloudVoice.dll")));
+        }
+        return isLibrarySupported;
     }
 }
