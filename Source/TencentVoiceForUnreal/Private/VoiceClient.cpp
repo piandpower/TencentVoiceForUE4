@@ -14,6 +14,21 @@ UVoiceClient::~UVoiceClient()
 
 }
 
+void UVoiceClient::Tick(float DeltaTime)
+{
+	m_voiceengine->Poll();
+}
+
+FORCEINLINE bool UVoiceClient::IsTickable() const
+{
+	return true;
+}
+
+FORCEINLINE TStatId UVoiceClient::GetStatId() const
+{
+	return TStatId();
+}
+
 UVoiceClient * UVoiceClient::GetVoiceClient()
 {
 	if (nullptr == VoiceClient)
@@ -24,13 +39,19 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 	return VoiceClient;
 }
 
-bool UVoiceClient::SetAppInfo()
+bool UVoiceClient::SetAppInfo(const FString& appID, const FString& appKey, int32 RoleID)
 {
-	if (nullptr == m_voiceengine)
+	if ((nullptr == m_voiceengine)
+		&& (gcloud_voice::GCLOUD_VOICE_SUCC != m_voiceengine->SetAppInfo(TCHAR_TO_ANSI(*appID), TCHAR_TO_ANSI(*appKey), (char*)&RoleID)))
 	{
 		return false;
 	}
-	m_voiceengine->SetAppInfo("932849489", "d94749efe9fce61333121de84123ef9b", "E81DCA1782C5CE8B0722A366D7ECB41F");
-	UE_LOG(LogTemp, Error, TEXT("SetAppInfo Successed!"));
 	return true;
+}
+
+void UVoiceClient::InitEngine()
+{
+	m_voiceengine->Init();
+	m_voiceengine->SetMode(gcloud_voice::IGCloudVoiceEngine::RealTime);
+	m_voiceengine->SetServerInfo("udp://cn.voice.gcloudcs.com:10001");
 }
