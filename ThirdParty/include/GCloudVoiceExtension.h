@@ -23,12 +23,13 @@ namespace gcloud_voice
         /**
          * Don't play voice of the member.
          * 
+         * @param roomName: the room to join, should be less than 127byte, composed by alpha.
          * @param member : member to forbid
          * @param bEnable : do forbid if it is true
          * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
          * @see : GCloudVoiceErrno
          */
-        virtual GCloudVoiceErrno ForbidMemberVoice(int member, bool bEnable) = 0;
+        virtual GCloudVoiceErrno ForbidMemberVoice(int member, bool bEnable, const char *roomName="") = 0;
         
         /**
          * Open Voice Engine's logcat

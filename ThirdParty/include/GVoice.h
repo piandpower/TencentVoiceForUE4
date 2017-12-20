@@ -35,6 +35,10 @@ enum GCloudVoiceErrno
     GCLOUD_VOICE_JOIN_ERR = 0x2002, //8194, join room failed
     GCLOUD_VOICE_QUIT_ROOMNAME_ERR = 0x2003,	//8195, quit room err, the quit roomname not equal join roomname
     GCLOUD_VOICE_OPENMIC_NOTANCHOR_ERR = 0x2004,//8196, open mic in bigroom,but not anchor role
+    GCLOUD_VOICE_CREATE_ROOM_ERR = 0x2005, // 8197, create room error
+    GCLOUD_VOICE_NO_ROOM = 0x2006, // 8198, no such room
+    GCLOUD_VOICE_QUIT_ROOM_ERR = 0x2007, //8199, quit room error
+    GCLOUD_VOICE_ALREADY_IN_THE_ROOM = 0x2008, // 8200, already in the room which in JoinXxxxRoom
     
     
     //message err
@@ -48,6 +52,7 @@ enum GCloudVoiceErrno
     GCLOUD_VOICE_SPEAKER_ERR = 0x3008, //12296, open or close speaker tve error
     GCLOUD_VOICE_TVE_PLAYSOUND_ERR = 0x3009, //12297, tve play file error
     GCLOUD_VOICE_AUTHING = 0x300a, // 12298, Already in applying auth key processing
+    GCLOUD_VOICE_LIMIT              = 0x300b,   //12299, upload limit
     
     GCLOUD_VOICE_INTERNAL_TVE_ERR = 0x5001,		//20481, internal TVE err, our used
     GCLOUD_VOICE_INTERNAL_VISIT_ERR = 0x5002,	//20482, internal Not TVE err, out used
@@ -188,6 +193,17 @@ enum SoundEffects
  */
 - (void) onMemberVoice:	(const unsigned int * _Nullable)members withCount: (int) count;
 
+
+
+/**
+ * Callback when someone saied or silence in the same room.
+ *
+ * @param roomName: name of the room.
+ * @param member: the member's ID
+ * @param status : status could be 0, 1, 2. 0 meets silence and 1/2 means saying
+ */
+- (void) onMemberVoice:(const char * _Nullable)roomName	member:(unsigned int)member withStatus: (int) status;
+
 // Voice Message Callback
 /**
  * Callback when upload voice file successful or failed.
@@ -245,7 +261,7 @@ enum SoundEffects
 /**
  * Callback when translate voice to text successful or failed.
  */
-- (void) onStreamSpeechToText:(enum GCloudVoiceCompleteCode) code withError:(int) error andResult:(const char *_Nullable)result;
+- (void) onStreamSpeechToText:(enum GCloudVoiceCompleteCode) code withError:(int) error andResult:(const char *_Nullable)result forPath:(const char *_Nullable)voicePath;
 
 /**
  * Callback when change to another role
@@ -339,6 +355,27 @@ enum SoundEffects
  */
 - (enum GCloudVoiceErrno) joinTeamRoom:(const char * _Nullable)roomName timeout: (int) msTimeout;
 
+/**
+ * Join in a LBS room.
+ *
+ * @param roomName: the room to join, should be less than 127byte, composed by alpha.
+ * @param msTimeout: time for join, it is micro second. value range[5000, 60000]
+ * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+ * @see : GCloudVoiceErrno
+ */
+- (enum GCloudVoiceErrno) joinRangeRoom:(const char * _Nullable)roomName timeout: (int) msTimeout;
+
+/**
+ * Update your coordinate
+ *
+ * @param x: the x coordinate
+ * @param y: the y coordinate
+ * @param z: the z coordinate
+ * @param r: the audience's radius
+ * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+ * @see : GCloudVoiceErrno
+ */
+- (enum GCloudVoiceErrno) updateCoordinate:(const char * _Nullable)roomName x:(int64_t) x  y:(int64_t) y  z:(int64_t) z r:(int64_t) r ;
 
 
 /**
@@ -369,7 +406,8 @@ enum SoundEffects
  * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
  * @see : GCloudVoiceErrno
  */
-- (enum GCloudVoiceErrno) ChangeRole:(enum GCloudVoiceMemberRole) role;
+- (enum GCloudVoiceErrno) ChangeRole:(enum GCloudVoiceMemberRole) role inRoom:(const char *_Nullable)roomName;
+- (enum GCloudVoiceErrno) ChangeRole:(enum GCloudVoiceMemberRole) role ;
 
 /**
  * Quit the voice room.
@@ -413,6 +451,35 @@ enum SoundEffects
  */
 - (enum GCloudVoiceErrno) closeSpeaker;
 
+
+/**
+ * Close or Open microphone for the room
+ *
+ * @param roomName : the room
+ * @param enable : ture for open and false for close
+ * @return if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+ */
+- (enum GCloudVoiceErrno) enableRoomMicrophone:(const char *_Nonnull) roomName enable:(bool) enable;
+
+/**
+ * Close or Open speaker for the room
+ *
+ * @param roomName : the room
+ * @param enable : ture for open and false for close
+ * @return if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+ */
+- (enum GCloudVoiceErrno) enableRoomSpeaker:(const char *_Nonnull) roomName enable:(bool) enable;
+
+
+/**
+ * enable a client join in multi rooms.
+ *
+ * this may cause higher bitrate
+ *
+ * @param enable : ture for open and false for close
+ * @return if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+ */
+- (enum GCloudVoiceErrno) enableMultiRoom:(bool) enable;
 
 #pragma mark  Messages Voice API
 /**
@@ -560,7 +627,7 @@ enum SoundEffects
  * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
  * @see : GCloudVoiceErrno
  */
-- (enum GCloudVoiceErrno) forbidMemberVoice:(int) member enable:(BOOL) bEnable;
+- (enum GCloudVoiceErrno) forbidMemberVoice:(int) member enable:(BOOL) bEnable inRoom:(const char * _Nullable)roomName ;
 
 /**
  * Open Voice Engine's logcat
@@ -649,6 +716,69 @@ enum SoundEffects
           arg2: (unsigned int)    nParam2
           arg3: (unsigned int *_Nullable)pOutput;
 
+
+/*
+* set BGM Play file
+* @param : file address
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+- (enum GCloudVoiceErrno) SetBGMPath:(const char *_Nullable) pPath;
+
+/*
+* start BGM Play 
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+-(enum GCloudVoiceErrno) StartBGMPlay;
+
+/*
+* set BGM Play Volume
+* @param : play volume ,normal value is 100,more than 100 the sound loud,less 100 sound soft
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+-(enum GCloudVoiceErrno) SetBGMVol:(int)nvol;
+
+/*
+* stop BGM Play
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+-(enum GCloudVoiceErrno) StopBGMPlay;
+
+/*
+* pause BGM Play
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+-(enum GCloudVoiceErrno) PauseBGMPlay;
+/*
+* resume BGM Play
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+-(enum GCloudVoiceErrno) ResumeBGMPlay;
+/*
+* native can listen BGM Play
+* param: bEnable: true   native can listen BGM Play
+*		: false  native can not listen BGM Play
+* default is enable true
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+-(enum GCloudVoiceErrno) EnableNativeBGMPlay:(BOOL)bEnable;
+/*
+* get BGM Playing state
+* @return : if BGM Playing return 0,if BGM play end return 1
+*/
+-(int) GetBGMPlayState;
+/*
+* set bitrate for encode
+* @param : bitrate, you want set value, default value is 32000
+* @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+*/
+
+-(enum GCloudVoiceErrno) SetBitRate:(int)bitrate;
+
+/*
+* get howling state
+* @return : if howling happen return 1,else return 0
+*/
+-(int) GetBGMPlayState;
 
 @end
 

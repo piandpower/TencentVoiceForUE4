@@ -9,16 +9,16 @@
 #ifndef gcloud_voice_GCloudVoiceVersion_h_
 #define gcloud_voice_GCloudVoiceVersion_h_
 
-#define GCLOUD_VOICE_VERSION "GCloudVoice1.1.12.159258"
+#define GCLOUD_VOICE_VERSION "GCloudVoice1.1.15.164628"
 
 namespace gcloud_voice
 {
 enum {
     VER_MAJOR = 1,
     VER_MINOR = 1,
-    VER_FIX   = 12,
+    VER_FIX   = 15,
     
-    VER_SVN   = 159258,
+    VER_SVN   = 164628,
     
     VER_BUF_LEN = 1024,
 };

@@ -12,7 +12,7 @@ public class TencentVoiceForUnreal : ModuleRules
 		PublicIncludePaths.AddRange(
 			new string[] {
 				"TencentVoiceForUnreal/Public",
-                Path.Combine(ThirdPartyPath,"include")
+                //Path.Combine(ThirdPartyPath,"include")
 				// ... add public include paths required here ...
 			}
 			);
@@ -72,8 +72,8 @@ public class TencentVoiceForUnreal : ModuleRules
             isLibrarySupported = true;
 
             string LibPath = Path.Combine(ThirdPartyPath, "lib");
-            string DllPath = Path.Combine(ThirdPartyPath, "dll");
-            System.Console.WriteLine(Path.Combine(DllPath, "GCloudVoice.dll"));
+            //string DllPath = Path.Combine(ThirdPartyPath, "dll");
+            //System.Console.WriteLine(Path.Combine(DllPath, "GCloudVoice.dll"));
 
             // Add Library Path 
             PublicLibraryPaths.Add(LibPath);
@@ -82,9 +82,9 @@ public class TencentVoiceForUnreal : ModuleRules
             PublicAdditionalLibraries.Add("GCloudVoice.lib");
 
             //Add Dynamic Libraries
-            PublicDelayLoadDLLs.Add("GCloudVoice.dll");
+            //PublicDelayLoadDLLs.Add("GCloudVoice.dll");
 
-            RuntimeDependencies.Add(new RuntimeDependency(Path.Combine(DllPath, "GCloudVoice.dll")));
+            //RuntimeDependencies.Add(new RuntimeDependency(Path.Combine(DllPath, "GCloudVoice.dll")));
         }
         return isLibrarySupported;
     }

@@ -31,8 +31,9 @@ namespace gcloud_voice
      */
     class GCLOUD_VOICE_API IGCloudVoiceNotify
     {
-    protected:
+    public:
         IGCloudVoiceNotify();
+        virtual ~IGCloudVoiceNotify();
         
     public:
         // Real-Time Callback
@@ -63,6 +64,7 @@ namespace gcloud_voice
         virtual void OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName) ;
         
         /**
+         ** Deprecate from GVoice 1.1.14
          * Callback when someone saied or silence in the same room.
          *
          * @param count: count of members who's status has changed.
@@ -70,6 +72,16 @@ namespace gcloud_voice
          * here, status could be 0, 1, 2. 0 meets silence and 1/2 means saying
          */
         virtual void OnMemberVoice	(const unsigned int *members, int count) ;
+        
+        
+        /**
+         * Callback when someone saied or silence in the same room.
+         *
+         * @param roomName: name of the room.
+         * @param member: the member's ID
+         * @param status : status could be 0, 1, 2. 0 meets silence and 1/2 means saying
+         */
+        virtual void OnMemberVoice (const char *roomName, unsigned int member, int status);
         
         // Voice Message Callback
         /**
@@ -127,7 +139,7 @@ namespace gcloud_voice
         /**
          * Callback when translate voice to text successful or failed.
          */
-        virtual void OnStreamSpeechToText(GCloudVoiceCompleteCode code, int error, const char *result);
+        virtual void OnStreamSpeechToText(GCloudVoiceCompleteCode code, int error, const char *result, const char *voicePath);
         
         /**
          * Callback when change to another role
@@ -282,6 +294,28 @@ namespace gcloud_voice
         virtual GCloudVoiceErrno JoinTeamRoom(const char *roomName, int msTimeout = 10000) = 0;
         
 
+        /**
+         * Join in a LBS room.
+         *
+         * @param roomName: the room to join, should be less than 127byte, composed by alpha.
+         * @param msTimeout: time for join, it is micro second. value range[5000, 60000]
+         * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+         * @see : GCloudVoiceErrno
+         */
+        virtual GCloudVoiceErrno JoinRangeRoom(const char *roomName, int msTimeout = 10000) = 0;
+        
+        /**
+         * Update your coordinate
+         *
+         * @param roomName: the room to update, should be less than 127byte, composed by alpha.
+         * @param x: the x coordinate
+         * @param y: the y coordinate
+         * @param z: the z coordinate
+         * @param r: the audience's radius
+         * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+         * @see : GCloudVoiceErrno
+         */
+        virtual GCloudVoiceErrno UpdateCoordinate(const char *roomName, int64_t x, int64_t y, int64_t z, int64_t r) = 0;
         
         /**
          * Join in a national room.
@@ -317,11 +351,12 @@ namespace gcloud_voice
         /**
          * Change member's role in the room
          *
+         * @param roomName: the room to change, should be less than 127byte, composed by alpha.
          * @param role: member's role for change to
          * @return : if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
          * @see : GCloudVoiceErrno
          */
-        virtual GCloudVoiceErrno ChangeRole(GCloudVoiceMemberRole role) = 0;
+        virtual GCloudVoiceErrno ChangeRole(GCloudVoiceMemberRole role, const char *roomName="") = 0;
         
         /**
          * Open player's micro phone  and begin to send player's voice data.
@@ -355,6 +390,33 @@ namespace gcloud_voice
          */
         virtual GCloudVoiceErrno CloseSpeaker() = 0;
         
+        /**
+         * enable a client join in multi rooms.
+         *
+         * this may cause higher bitrate
+         *
+         * @param enable : ture for open and false for close
+         * @return if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+         */
+        virtual GCloudVoiceErrno EnableMultiRoom(bool enable) = 0;
+        
+        /**
+         * Close or Open microphone for the room
+         *
+         * @param roomName : the room
+         * @param enable : ture for open and false for close
+         * @return if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+         */
+        virtual GCloudVoiceErrno EnableRoomMicrophone(const char *roomName, bool enable) = 0;
+        
+        /**
+         * Close or Open speaker for the room
+         *
+         * @param roomName : the room
+         * @param enable : ture for open and false for close
+         * @return if success return GCLOUD_VOICE_SUCC, failed return other errno @see GCloudVoiceErrno
+         */
+        virtual GCloudVoiceErrno EnableRoomSpeaker(const char *roomName, bool enable) = 0;
         
         //Messages Voice API
     public:
@@ -491,6 +553,25 @@ namespace gcloud_voice
 		*/
 		
 		virtual int    GetVoiceIdentify() = 0;
+
+
+
+	public:
+		virtual GCloudVoiceErrno SetBGMPath(const char * pPath) =0;
+		virtual GCloudVoiceErrno StartBGMPlay() =0;
+		virtual GCloudVoiceErrno SetBGMVol(int nvol) =0;
+		virtual GCloudVoiceErrno StopBGMPlay() =0;
+		virtual GCloudVoiceErrno PauseBGMPlay() =0;
+		virtual GCloudVoiceErrno ResumeBGMPlay() =0;
+		virtual GCloudVoiceErrno EnableNativeBGMPlay(bool bEnable) =0;
+		virtual int GetBGMPlayState() =0;
+
+		virtual GCloudVoiceErrno SetBitRate(int bitrate) = 0;
+
+	/*
+		return 0 or 1;  0 : no howling   1: have howling
+	*/
+		virtual int  GetHwState() = 0;
 		
 	};
     

@@ -35,7 +35,10 @@ namespace gcloud_voice
 		GCLOUD_VOICE_JOIN_ERR           = 0x2002,   //8194, join room failed
 		GCLOUD_VOICE_QUIT_ROOMNAME_ERR  = 0x2003,   //8195, quit room err, the quit roomname not equal join roomname
 		GCLOUD_VOICE_OPENMIC_NOTANCHOR_ERR = 0x2004,//8196, open mic in bigroom,but not anchor role
-
+        GCLOUD_VOICE_CREATE_ROOM_ERR = 0x2005, // 8197, create room error
+        GCLOUD_VOICE_NO_ROOM = 0x2006, // 8198, no such room
+        GCLOUD_VOICE_QUIT_ROOM_ERR = 0x2007, //8199, quit room error
+        GCLOUD_VOICE_ALREADY_IN_THE_ROOM = 0x2008, // 8200, already in the room which in JoinXxxxRoom
 
 		//message err
 		GCLOUD_VOICE_AUTHKEY_ERR        = 0x3001,   //12289, apply authkey api error
@@ -48,7 +51,7 @@ namespace gcloud_voice
 		GCLOUD_VOICE_SPEAKER_ERR        = 0x3008,   //12296, open or close speaker tve error
 		GCLOUD_VOICE_TVE_PLAYSOUND_ERR  = 0x3009,   //12297, tve play file error
         GCLOUD_VOICE_AUTHING            = 0x300a,   // 12298, Already in applying auth key processing
-        GCLOUD_VOICE_LIMIT              = 0x300b,   //12299, 
+        GCLOUD_VOICE_LIMIT              = 0x300b,   //12299, upload limit
 
 		GCLOUD_VOICE_INTERNAL_TVE_ERR   = 0x5001,		//20481, internal TVE err, our used
 		GCLOUD_VOICE_INTERNAL_VISIT_ERR = 0x5002,	//20482, internal Not TVE err, out used
@@ -61,7 +64,8 @@ namespace gcloud_voice
         GCLOUD_VOICE_CHANGE_ROLE = 0x08001, // 32769, change role error
         GCLOUD_VOICE_CHANGING_ROLE=0x08002, // 32770, is in changing role
         GCLOUD_VOICE_NOT_IN_ROOM =0x08003, // 32771, no in room
-
+        GCLOUD_VOICE_COORDINATE  = 0x09001, // 36865, sync coordinate error
+        GCLOUD_VOICE_SMALL_ROOMNAME = 0x09002, // 36866, query with a small roomname
     };
     
     enum GCloudVoiceCompleteCode
@@ -102,6 +106,8 @@ namespace gcloud_voice
         GV_ON_ROLE_MAX_AHCHOR, // To much Anchor
         GV_ON_ROLE_NO_CHANGE, // The same role
         GV_ON_ROLE_SVR_ERROR, // server's error
+        
+        GV_ON_RSTT_RETRY, // need retry stt
     };
 
 } // endof namespace gcloud_voice
