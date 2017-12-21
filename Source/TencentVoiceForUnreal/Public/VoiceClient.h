@@ -5,13 +5,24 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GCloudVoice.h"
-#include "TeamRoomNotify.h"
+#include "NotifyBase.h"
 #include "Runtime/Engine/Public/Tickable.h"
 #include "VoiceClient.generated.h"
 
 /**
  * 
  */
+
+UENUM()
+enum class VoiceMode : uint8
+{
+	RealTime = 0, // realtime mode for TeamRoom or NationalRoom
+	Messages,     // voice message mode
+	Translation,  // speach to text mode
+	RSTT, // real-time speach to text mode
+	HIGHQUALITY = 4, //high quality realtime voice, will cost more network traffic
+};
+
 UCLASS()
 class TENCENTVOICEFORUNREAL_API UVoiceClient : public UObject, public FTickableGameObject
 {
@@ -39,6 +50,14 @@ public:
 		void InitVoiceEngine();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// Set engine voice mode
+		void SetMode(VoiceMode VoiceModeCode);
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// Set engine server info
+		void SetServerInfo(const FString& ServerAddr);
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// On application pause
 		void OnPause();
 
@@ -48,15 +67,11 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set your Notify or Callback, successed return true, otherwise return false
-		bool SetNotify(UObject* NotifyToUse);
-
-	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		// Get current Notify
-		UObject* GetNotify();
+		bool SetNotify(TSubclassOf<UObject> NotifyClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Join team room, successed return true, otherwise return false
-		bool JoinTeamRoom(const FString& RoomName, int32 msTimeout);
+		// Join team room. if successful, will callback notify OnJoinRoom function
+		void JoinTeamRoom(const FString& RoomName, int32 msTimeout);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Open Microphone
@@ -77,6 +92,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Quit room, successed return true, otherwise return false
 		bool QuitRoom(const FString& RoomName, int32 msTimeout);
+
+	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
+		// Get current Notify
+		UObject* GetNotify();
 
 private:
 	// The UVoiceClient instance handle(static)
