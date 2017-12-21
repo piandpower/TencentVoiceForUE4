@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "ModuleManager.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(TencentVoicePlugin, Display, All);
+
 class FTencentVoiceForUnrealModule : public IModuleInterface
 {
 public:

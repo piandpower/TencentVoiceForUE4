@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GCloudVoice.h"
+#include "GCloudVoiceErrno.h"
+#include "TencentVoiceForUnreal.h"
 #include "TeamRoomNotify.generated.h"
 
 using namespace gcloud_voice;

@@ -32,11 +32,19 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set VoiceEngine AppInfo. successed return true, otherwise return false
-		bool SetAppInfo(const FString& appID, const FString& appKey, int32 RoleID);
+		bool SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Initialise engine
-		void InitEngine();
+		void InitVoiceEngine();
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// On application pause
+		void OnPause();
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// On application resume
+		void OnResume();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set your Notify or Callback, successed return true, otherwise return false
@@ -51,20 +59,20 @@ public:
 		bool JoinTeamRoom(const FString& RoomName, int32 msTimeout);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Open Microphone, successed return true, otherwise return false
-		bool OpenMic();
+		// Open Microphone
+		void OpenMic();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Close Microphone, successed return true, otherwise return false
-		bool CloseMic();
+		// Close Microphone
+		void CloseMic();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Open speaker, successed return true, otherwise return false
-		bool OpenSpeaker();
+		// Open speaker
+		void OpenSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Close speaker, successed return true, otherwise return false
-		bool CloseSpeaker();
+		// Close speaker
+		void CloseSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Quit room, successed return true, otherwise return false

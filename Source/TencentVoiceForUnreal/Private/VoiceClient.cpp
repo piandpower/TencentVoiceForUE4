@@ -39,30 +39,40 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 	return VoiceClient;
 }
 
-bool UVoiceClient::SetAppInfo(const FString& appID, const FString& appKey, int32 RoleID)
+bool UVoiceClient::SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID)
 {
-	//UE_LOG(LogTemp, Error, TEXT("SetAppInfo return code %d!"), static_cast<int32>(m_voiceengine->SetAppInfo(TCHAR_TO_ANSI(*appID), TCHAR_TO_ANSI(*appKey), TCHAR_TO_ANSI(*FString::FromInt(RoleID)))));
+	//UE_LOG(TencentVoicePlugin, Display, TEXT("SetAppInfo return code %d!"), static_cast<int32>(m_voiceengine->SetAppInfo(TCHAR_TO_ANSI(*appID), TCHAR_TO_ANSI(*appKey), TCHAR_TO_ANSI(*OpenID))));
 
 	if ((nullptr != m_voiceengine)
-		&& (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->SetAppInfo(TCHAR_TO_ANSI(*appID), TCHAR_TO_ANSI(*appKey), TCHAR_TO_ANSI(*FString::FromInt(RoleID)))))
+		&& (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->SetAppInfo(TCHAR_TO_ANSI(*appID), TCHAR_TO_ANSI(*appKey), TCHAR_TO_ANSI(*OpenID))))
 	{
 		return true;
 	}
 	return false;
 }
 
-void UVoiceClient::InitEngine()
+void UVoiceClient::InitVoiceEngine()
 {
-	m_voiceengine->Init();
-	//UE_LOG(LogTemp, Error, TEXT("Init return code %d"), static_cast<int32>(m_voiceengine->Init()));
+	//m_voiceengine->Init();
+	UE_LOG(TencentVoicePlugin, Display, TEXT("InitVoiceEngine return code %d!"), static_cast<int32>(m_voiceengine->Init()));
 	m_voiceengine->SetMode(gcloud_voice::IGCloudVoiceEngine::RealTime);
 	m_voiceengine->SetServerInfo("udp://cn.voice.gcloudcs.com:10001");
+}
+
+void UVoiceClient::OnPause()
+{
+	UE_LOG(TencentVoicePlugin, Display, TEXT("OnPause return code %d!"), static_cast<int32>(m_voiceengine->Pause()));
+}
+
+void UVoiceClient::OnResume()
+{
+	UE_LOG(TencentVoicePlugin, Display, TEXT("OnResume return code %d!"), static_cast<int32>(m_voiceengine->Resume()));
 }
 
 bool UVoiceClient::SetNotify(UObject * NotifyToUse)
 {
 	class UTeamRoomNotify* TempNotify = NewObject<UTeamRoomNotify>();
-	//UE_LOG(LogTemp, Error, TEXT("SetNotify return code %d"), static_cast<int32>(m_voiceengine->SetNotify(TempNotify)));
+	//UE_LOG(TencentVoicePlugin, Display, TEXT("SetNotify return code %d!"), static_cast<int32>(m_voiceengine->SetNotify(TempNotify)));
 	//class MessageNotify* TempNotify = new class MessageNotify();
 	
 	if ((nullptr != TempNotify)
@@ -81,7 +91,7 @@ UObject * UVoiceClient::GetNotify()
 
 bool UVoiceClient::JoinTeamRoom(const FString & RoomName, int32 msTimeout)
 {
-	//UE_LOG(LogTemp, Error, TEXT("JoinTeamRoom return code %d"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+	//UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
 
 	if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout))
 	{
@@ -90,53 +100,29 @@ bool UVoiceClient::JoinTeamRoom(const FString & RoomName, int32 msTimeout)
 	return false;
 }
 
-bool UVoiceClient::OpenMic()
+void UVoiceClient::OpenMic()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OpenMic return code %d"), static_cast<int32>(m_voiceengine->OpenMic()));
-
-	/*if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->OpenMic())
-	{
-		return true;
-	}*/
-	return false;
+	UE_LOG(TencentVoicePlugin, Display, TEXT("OpenMic return code %d!"), static_cast<int32>(m_voiceengine->OpenMic()));
 }
 
-bool UVoiceClient::CloseMic()
+void UVoiceClient::CloseMic()
 {
-	UE_LOG(LogTemp, Warning, TEXT("CloseMic return code %d"), static_cast<int32>(m_voiceengine->CloseMic()));
-
-	/*if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->CloseMic())
-	{
-		return true;
-	}*/
-	return false;
+	UE_LOG(TencentVoicePlugin, Display, TEXT("CloseMic return code %d!"), static_cast<int32>(m_voiceengine->CloseMic()));
 }
 
-bool UVoiceClient::OpenSpeaker()
+void UVoiceClient::OpenSpeaker()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OpenSpeaker return code %d"), static_cast<int32>(m_voiceengine->OpenSpeaker()));
-
-	/*if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->OpenSpeaker())
-	{
-		return true;
-	}*/
-	return false;
+	UE_LOG(TencentVoicePlugin, Display, TEXT("OpenSpeaker return code %d!"), static_cast<int32>(m_voiceengine->OpenSpeaker()));
 }
 
-bool UVoiceClient::CloseSpeaker()
+void UVoiceClient::CloseSpeaker()
 {
-	UE_LOG(LogTemp, Warning, TEXT("OpenSpeaker return code %d"), static_cast<int32>(m_voiceengine->CloseSpeaker()));
-
-	/*if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->CloseSpeaker())
-	{
-		return true;
-	}*/
-	return false;
+	UE_LOG(TencentVoicePlugin, Display, TEXT("CloseSpeaker return code %d!"), static_cast<int32>(m_voiceengine->CloseSpeaker()));
 }
 
 bool UVoiceClient::QuitRoom(const FString & RoomName, int32 msTimeout)
 {
-	/*UE_LOG(LogTemp, Error, TEXT("QuitRoom return code %d"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));*/
+	/*UE_LOG(TencentVoicePlugin, Display, TEXT("QuitRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));*/
 
 	if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout))
 	{
