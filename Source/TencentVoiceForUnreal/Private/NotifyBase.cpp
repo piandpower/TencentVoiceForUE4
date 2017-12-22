@@ -14,23 +14,21 @@ UNotifyBase::~UNotifyBase()
 
 void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName, int memberID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnJoinRoom"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnJoinRoom return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnJoinRoom);
-	if (TCallback)
+	if (gcloud_voice::GV_ON_JOINROOM_SUCC == code)
 	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("OnJoinRoom Callback notequal nullptr!"));
-		TCallback->ExecuteIfBound();
-	}
-	else
-	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("OnJoinRoom Callback equal nullptr!"));
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnJoinRoom);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
 	}
 }
 
 void UNotifyBase::OnStatusUpdate(GCloudVoiceCompleteCode status, const char *roomName, int memberID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnStatusUpdate"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnStatusUpdate return code %d!"), static_cast<int32>(status));
 
 	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnStatusUpdate);
 	if (nullptr != TCallback)
@@ -41,13 +39,15 @@ void UNotifyBase::OnStatusUpdate(GCloudVoiceCompleteCode status, const char *roo
 
 void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnQuitRoom"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnQuitRoom return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnQuitRoom);
-	if (nullptr != TCallback)
+	if (gcloud_voice::GV_ON_QUITROOM_SUCC == code)
 	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("OnJoinRoom Callback notequal nullptr!"));
-		TCallback->ExecuteIfBound();
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnQuitRoom);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
 	}
 }
 
@@ -59,7 +59,7 @@ void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 
 void UNotifyBase::OnMemberVoice(const char *roomName, unsigned int member, int status)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnMemberVoice"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnMemberVoice report member:%d with status:%d in room:%s"), static_cast<int32>(member), static_cast<int32>(status), *roomName);
 
 	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnMemberVoice);
 	if (nullptr != TCallback)
@@ -70,57 +70,72 @@ void UNotifyBase::OnMemberVoice(const char *roomName, unsigned int member, int s
 
 void UNotifyBase::OnUploadFile(GCloudVoiceCompleteCode code, const char *filePath, const char *fileID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnUploadFile"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnUploadFile return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnUploadFile);
-	if (nullptr != TCallback)
+	if (gcloud_voice::GV_ON_UPLOAD_RECORD_DONE == code)
 	{
-		TCallback->ExecuteIfBound();
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnUploadFile);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
 	}
 }
 
 void UNotifyBase::OnDownloadFile(GCloudVoiceCompleteCode code, const char *filePath, const char *fileID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnDownloadFile"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnDownloadFile return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnDownloadFile);
-	if (nullptr != TCallback)
+	if (gcloud_voice::GV_ON_DOWNLOAD_RECORD_DONE == code)
 	{
-		TCallback->ExecuteIfBound();
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnDownloadFile);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
 	}
 }
 
 void UNotifyBase::OnPlayRecordedFile(GCloudVoiceCompleteCode code, const char *filePath)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnPlayRecordedFile"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnPlayRecordedFile return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnPlayRecordedFile);
-	if (nullptr != TCallback)
+	if (gcloud_voice::GV_ON_PLAYFILE_DONE == code)
 	{
-		TCallback->ExecuteIfBound();
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnPlayRecordedFile);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
 	}
 }
 
 void UNotifyBase::OnApplyMessageKey(GCloudVoiceCompleteCode code)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnApplyMessageKey"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnApplyMessageKey return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnApplyMessageKey);
-	if (nullptr != TCallback)
+	if (gcloud_voice::GV_ON_MESSAGE_KEY_APPLIED_SUCC == code)
 	{
-		TCallback->ExecuteIfBound();
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnApplyMessageKey);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
 	}
 }
 
 void UNotifyBase::OnSpeechToText(GCloudVoiceCompleteCode code, const char *fileID, const char *result)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnSpeechToText"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnSpeechToText return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnSpeechToText);
-	if (nullptr != TCallback)
-	{
-		TCallback->ExecuteIfBound();
-	}
+	/*if (gcloud_voice::GV_ON_STT_SUCC == code)
+	{*/
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnSpeechToText);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
+	//}
 }
 
 void UNotifyBase::OnRecording(const unsigned char* pAudioData, unsigned int nDataLength)
@@ -136,7 +151,7 @@ void UNotifyBase::OnRecording(const unsigned char* pAudioData, unsigned int nDat
 
 void UNotifyBase::OnStreamSpeechToText(GCloudVoiceCompleteCode code, int error, const char *result, const char *voicePath)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnStreamSpeechToText"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnStreamSpeechToText return code %d!"), static_cast<int32>(code));
 
 	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnStreamSpeechToText);
 	if (nullptr != TCallback)
@@ -147,20 +162,28 @@ void UNotifyBase::OnStreamSpeechToText(GCloudVoiceCompleteCode code, int error, 
 
 void UNotifyBase::OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomName, int memberID, int role)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnRoleChanged"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnRoleChanged return code %d!"), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnRoleChanged);
-	if (nullptr != TCallback)
+	if (gcloud_voice::GV_ON_ROLE_SUCC == code)
 	{
-		TCallback->ExecuteIfBound();
+		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnRoleChanged);
+		if (nullptr != TCallback)
+		{
+			TCallback->ExecuteIfBound();
+		}
 	}
 }
 
-void UNotifyBase::GetNotifyDefaultObject(TSubclassOf<UNotifyBase> NotifyClass, UNotifyBase *& OutObject)
+UNotifyBase* UNotifyBase::GetNotifyInstance(UClass* NotifyClass)
 {
-	OutObject = Cast<UNotifyBase>(NotifyClass->GetDefaultObject(true));
-
+	UE_LOG(TencentVoicePlugin, Display, TEXT("GetNotifyInstance name is %s!"), *(NotifyClass->GetDefaultObject(true)->GetName()));
+	return Cast<UNotifyBase>(NotifyClass->GetDefaultObject(true));
 }
+
+//void UNotifyBase::GetNotifyDefaultObject(TSubclassOf<UObject> NotifyClass, UNotifyBase *& OutObject)
+//{
+//	OutObject = Cast<UNotifyBase>(NotifyClass->GetDefaultObject(true));
+//}
 
 //UNotifyBase * UNotifyBase::GetNotifyInstance(const UObject * Outer, TSubclassOf<UObject> NotifyClass)
 //{

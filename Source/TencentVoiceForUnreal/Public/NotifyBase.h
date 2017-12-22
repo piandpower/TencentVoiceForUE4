@@ -59,9 +59,12 @@ public:
 	virtual void OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomName, int memberID, int role) override;
 
 public:
-	UFUNCTION(BlueprintPure, Category = "Voice Plug-in", meta = (DeterminesOutputType = "ObjectClass", DynamicOutputParam = "OutObject"))
-		// Get your notify or callback instance
-		static void GetNotifyDefaultObject(TSubclassOf<UNotifyBase> NotifyClass, UNotifyBase*& OutObject);
+	//UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
+	//	// Get your notify or callback instance
+	//	static void GetNotifyDefaultObject(TSubclassOf<UObject> NotifyClass, UNotifyBase*& OutObject);
+
+	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
+		static UNotifyBase* GetNotifyInstance(UClass* NotifyClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set event for function name, when the callback function was called, this event will be called

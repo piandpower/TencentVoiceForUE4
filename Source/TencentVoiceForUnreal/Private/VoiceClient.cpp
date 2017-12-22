@@ -17,6 +17,7 @@ UVoiceClient::~UVoiceClient()
 void UVoiceClient::Tick(float DeltaTime)
 {
 	m_voiceengine->Poll();
+	//UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::Tick"));
 }
 
 FORCEINLINE bool UVoiceClient::IsTickable() const
