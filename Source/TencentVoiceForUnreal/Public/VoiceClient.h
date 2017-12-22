@@ -67,7 +67,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set your Notify or Callback, successed return true, otherwise return false
-		bool SetNotify(TSubclassOf<UObject> NotifyClass);
+		bool SetNotify(UNotifyBase* NotifyInstance);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Join team room. if successful, will callback notify OnJoinRoom function
@@ -90,12 +90,12 @@ public:
 		void CloseSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Quit room, successed return true, otherwise return false
-		bool QuitRoom(const FString& RoomName, int32 msTimeout);
+		// Quit room, if successful, will callback notify OnQuitRoom function
+		void QuitRoom(const FString& RoomName, int32 msTimeout);
 
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
 		// Get current Notify
-		UObject* GetNotify();
+		UNotifyBase* GetCurrentNotify();
 
 private:
 	// The UVoiceClient instance handle(static)
@@ -103,5 +103,5 @@ private:
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
 	// The current Notify or Callback handle
-	class UObject* CurrentNotify;
+	class UNotifyBase* CurrentNotify;
 };

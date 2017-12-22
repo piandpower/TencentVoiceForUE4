@@ -77,20 +77,14 @@ void UVoiceClient::OnResume()
 	UE_LOG(TencentVoicePlugin, Display, TEXT("OnResume return code %d!"), static_cast<int32>(m_voiceengine->Resume()));
 }
 
-bool UVoiceClient::SetNotify(TSubclassOf<UObject> NotifyClass)
+bool UVoiceClient::SetNotify(UNotifyBase* NotifyInstance)
 {
-	class UNotifyBase* TempNotify = NewObject<UNotifyBase>(NotifyClass);
-	//UE_LOG(TencentVoicePlugin, Display, TEXT("SetNotify return code %d!"), static_cast<int32>(m_voiceengine->SetNotify(TempNotify)));
-
-	if (nullptr != TempNotify)
-	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("Name is %s!"), *TempNotify->GetName());
-	}
+	//UE_LOG(TencentVoicePlugin, Display, TEXT("SetNotify return code %d!"), static_cast<int32>(m_voiceengine->SetNotify(NotifyInstance)));
 	
-	if ((nullptr != TempNotify)
-		&& (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->SetNotify(TempNotify)))
+	if ((nullptr != NotifyInstance)
+		&& (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->SetNotify(NotifyInstance)))
 	{
-		CurrentNotify = TempNotify;
+		CurrentNotify = NotifyInstance;
 		return true;
 	}
 	return false;
@@ -121,18 +115,12 @@ void UVoiceClient::CloseSpeaker()
 	UE_LOG(TencentVoicePlugin, Display, TEXT("CloseSpeaker return code %d!"), static_cast<int32>(m_voiceengine->CloseSpeaker()));
 }
 
-bool UVoiceClient::QuitRoom(const FString & RoomName, int32 msTimeout)
+void UVoiceClient::QuitRoom(const FString& RoomName, int32 msTimeout)
 {
-	/*UE_LOG(TencentVoicePlugin, Display, TEXT("QuitRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));*/
-
-	if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout))
-	{
-		return true;
-	}
-	return false;
+	UE_LOG(TencentVoicePlugin, Display, TEXT("QuitRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
 }
 
-UObject * UVoiceClient::GetNotify()
+UNotifyBase* UVoiceClient::GetCurrentNotify()
 {
 	return CurrentNotify;
 }
