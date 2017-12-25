@@ -2,14 +2,16 @@
 
 using UnrealBuildTool;
 using System.IO;
+using System;
 
 public class TencentVoiceForUnreal : ModuleRules
 {
 	public TencentVoiceForUnreal(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-		
-		PublicIncludePaths.AddRange(
+        //Type = ModuleType.External;
+
+        PublicIncludePaths.AddRange(
 			new string[] {
 				"TencentVoiceForUnreal/Public",
                 //Path.Combine(ThirdPartyPath,"include")
@@ -59,6 +61,11 @@ public class TencentVoiceForUnreal : ModuleRules
         LoadThirdParty(Target);
     }
 
+    private string GetProjectPath
+    {
+        get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../../../")); }
+    }
+
     private string ThirdPartyPath
     {
         get { return Path.GetFullPath(Path.Combine(ModuleDirectory, "../../ThirdParty/")); }
@@ -73,7 +80,7 @@ public class TencentVoiceForUnreal : ModuleRules
 
             string LibPath = Path.Combine(ThirdPartyPath, "lib");
             //string DllPath = Path.Combine(ThirdPartyPath, "dll");
-            //System.Console.WriteLine(Path.Combine(DllPath, "GCloudVoice.dll"));
+            //System.Console.WriteLine(Path.Combine(LibPath, "GCloudVoice.dll"));
 
             // Add Library Path 
             PublicLibraryPaths.Add(LibPath);
@@ -82,10 +89,29 @@ public class TencentVoiceForUnreal : ModuleRules
             PublicAdditionalLibraries.Add("GCloudVoice.lib");
 
             //Add Dynamic Libraries
-            //PublicDelayLoadDLLs.Add("GCloudVoice.dll");
+            PublicDelayLoadDLLs.Add("GCloudVoice.dll");
+            //PublicDelayLoadDLLs.Add(Path.Combine(LibPath, "GCloudVoice.dll"));
 
-            //RuntimeDependencies.Add(new RuntimeDependency(Path.Combine(DllPath, "GCloudVoice.dll")));
+            RuntimeDependencies.Add(new RuntimeDependency(Path.Combine(LibPath, "GCloudVoice.dll")));
+
+            CopyToBinaries(Path.Combine(LibPath, "GCloudVoice.dll"), Target);
         }
         return isLibrarySupported;
+    }
+
+    private void CopyToBinaries(string Filepath, ReadOnlyTargetRules Target)
+    {
+        string binariesDir = Path.Combine(GetProjectPath, "Binaries", Target.Platform.ToString());
+        string filename = Path.GetFileName(Filepath);
+
+        if (!Directory.Exists(binariesDir))
+        {
+            Directory.CreateDirectory(binariesDir);
+        }
+
+        if (!File.Exists(Path.Combine(binariesDir, filename)))
+        {
+            File.Copy(Filepath, Path.Combine(binariesDir, filename), true);
+        }
     }
 }
