@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CoreUObject.h"
 #include "UObject/NoExportTypes.h"
 #include "GCloudVoice.h"
 #include "TencentVoiceForUnreal.h"
-#include "Runtime/CoreUObject/Public/Templates/Casts.h"
 #include "NotifyBase.generated.h"
 
 using namespace gcloud_voice;
@@ -33,7 +33,7 @@ enum class FuncName : uint8
 	_OnRoleChanged
 };
 
-UCLASS()
+UCLASS(BlueprintType)
 class TENCENTVOICEFORUNREAL_API UNotifyBase : public UObject, public IGCloudVoiceNotify
 {
 	GENERATED_BODY()
@@ -59,12 +59,9 @@ public:
 	virtual void OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomName, int memberID, int role) override;
 
 public:
-	//UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-	//	// Get your notify or callback instance
-	//	static void GetNotifyDefaultObject(TSubclassOf<UObject> NotifyClass, UNotifyBase*& OutObject);
-
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		static UNotifyBase* GetNotifyInstance(UClass* NotifyClass);
+		// Get your notify or callback instance. (This function always returns NewObject!)
+		static UNotifyBase* GetNotifyInstance(TSubclassOf<UNotifyBase> NotifyClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set event for function name, when the callback function was called, this event will be called

@@ -85,7 +85,6 @@ bool UVoiceClient::SetNotify(UNotifyBase* NotifyInstance)
 	if ((nullptr != NotifyInstance)
 		&& (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->SetNotify(NotifyInstance)))
 	{
-		CurrentNotify = NotifyInstance;
 		return true;
 	}
 	return false;
@@ -119,9 +118,4 @@ void UVoiceClient::CloseSpeaker()
 void UVoiceClient::QuitRoom(const FString& RoomName, int32 msTimeout)
 {
 	UE_LOG(TencentVoicePlugin, Display, TEXT("QuitRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
-}
-
-UNotifyBase* UVoiceClient::GetCurrentNotify()
-{
-	return CurrentNotify;
 }

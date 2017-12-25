@@ -66,7 +66,7 @@ public:
 		void OnResume();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set your Notify or Callback, successed return true, otherwise return false
+		// Set your Notify or Callback, successed return true, otherwise return false.
 		bool SetNotify(UNotifyBase* NotifyInstance);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
@@ -93,15 +93,9 @@ public:
 		// Quit room, if successful, will callback notify OnQuitRoom function
 		void QuitRoom(const FString& RoomName, int32 msTimeout);
 
-	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		// Get current Notify
-		UNotifyBase* GetCurrentNotify();
-
 private:
 	// The UVoiceClient instance handle(static)
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
-	// The current Notify or Callback handle
-	class UNotifyBase* CurrentNotify;
 };

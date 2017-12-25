@@ -14,7 +14,7 @@ UNotifyBase::~UNotifyBase()
 
 void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName, int memberID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnJoinRoom return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnJoinRoom return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	if (gcloud_voice::GV_ON_JOINROOM_SUCC == code)
 	{
@@ -28,7 +28,7 @@ void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName,
 
 void UNotifyBase::OnStatusUpdate(GCloudVoiceCompleteCode status, const char *roomName, int memberID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnStatusUpdate return code %d!"), static_cast<int32>(status));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnStatusUpdate return code %d!"), *(this->GetName()), static_cast<int32>(status));
 
 	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnStatusUpdate);
 	if (nullptr != TCallback)
@@ -39,7 +39,7 @@ void UNotifyBase::OnStatusUpdate(GCloudVoiceCompleteCode status, const char *roo
 
 void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnQuitRoom return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnQuitRoom return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	if (gcloud_voice::GV_ON_QUITROOM_SUCC == code)
 	{
@@ -59,7 +59,7 @@ void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 
 void UNotifyBase::OnMemberVoice(const char *roomName, unsigned int member, int status)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnMemberVoice report member:%d with status:%d in room:%s"), static_cast<int32>(member), static_cast<int32>(status), *roomName);
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnMemberVoice report member:%d with status:%d in room:%s"), *(this->GetName()), static_cast<int32>(member), static_cast<int32>(status), *roomName);
 
 	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnMemberVoice);
 	if (nullptr != TCallback)
@@ -70,7 +70,7 @@ void UNotifyBase::OnMemberVoice(const char *roomName, unsigned int member, int s
 
 void UNotifyBase::OnUploadFile(GCloudVoiceCompleteCode code, const char *filePath, const char *fileID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnUploadFile return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnUploadFile return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	if (gcloud_voice::GV_ON_UPLOAD_RECORD_DONE == code)
 	{
@@ -84,7 +84,7 @@ void UNotifyBase::OnUploadFile(GCloudVoiceCompleteCode code, const char *filePat
 
 void UNotifyBase::OnDownloadFile(GCloudVoiceCompleteCode code, const char *filePath, const char *fileID)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnDownloadFile return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnDownloadFile return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	if (gcloud_voice::GV_ON_DOWNLOAD_RECORD_DONE == code)
 	{
@@ -98,7 +98,7 @@ void UNotifyBase::OnDownloadFile(GCloudVoiceCompleteCode code, const char *fileP
 
 void UNotifyBase::OnPlayRecordedFile(GCloudVoiceCompleteCode code, const char *filePath)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnPlayRecordedFile return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnPlayRecordedFile return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	if (gcloud_voice::GV_ON_PLAYFILE_DONE == code)
 	{
@@ -112,7 +112,7 @@ void UNotifyBase::OnPlayRecordedFile(GCloudVoiceCompleteCode code, const char *f
 
 void UNotifyBase::OnApplyMessageKey(GCloudVoiceCompleteCode code)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnApplyMessageKey return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnApplyMessageKey return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	if (gcloud_voice::GV_ON_MESSAGE_KEY_APPLIED_SUCC == code)
 	{
@@ -126,7 +126,7 @@ void UNotifyBase::OnApplyMessageKey(GCloudVoiceCompleteCode code)
 
 void UNotifyBase::OnSpeechToText(GCloudVoiceCompleteCode code, const char *fileID, const char *result)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnSpeechToText return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnSpeechToText return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	/*if (gcloud_voice::GV_ON_STT_SUCC == code)
 	{*/
@@ -140,7 +140,7 @@ void UNotifyBase::OnSpeechToText(GCloudVoiceCompleteCode code, const char *fileI
 
 void UNotifyBase::OnRecording(const unsigned char* pAudioData, unsigned int nDataLength)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnRecording"));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnRecording"), *(this->GetName()));
 
 	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnRecording);
 	if (nullptr != TCallback)
@@ -151,7 +151,7 @@ void UNotifyBase::OnRecording(const unsigned char* pAudioData, unsigned int nDat
 
 void UNotifyBase::OnStreamSpeechToText(GCloudVoiceCompleteCode code, int error, const char *result, const char *voicePath)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnStreamSpeechToText return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnStreamSpeechToText return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnStreamSpeechToText);
 	if (nullptr != TCallback)
@@ -162,7 +162,7 @@ void UNotifyBase::OnStreamSpeechToText(GCloudVoiceCompleteCode code, int error, 
 
 void UNotifyBase::OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomName, int memberID, int role)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnRoleChanged return code %d!"), static_cast<int32>(code));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnRoleChanged return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
 	if (gcloud_voice::GV_ON_ROLE_SUCC == code)
 	{
@@ -174,43 +174,22 @@ void UNotifyBase::OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomNa
 	}
 }
 
-UNotifyBase* UNotifyBase::GetNotifyInstance(UClass* NotifyClass)
+UNotifyBase * UNotifyBase::GetNotifyInstance(TSubclassOf<UNotifyBase> NotifyClass)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("GetNotifyInstance name is %s!"), *(NotifyClass->GetDefaultObject(true)->GetName()));
-	return Cast<UNotifyBase>(NotifyClass->GetDefaultObject(true));
+	return NewObject<UNotifyBase>(NotifyClass->GetClass());
 }
-
-//void UNotifyBase::GetNotifyDefaultObject(TSubclassOf<UObject> NotifyClass, UNotifyBase *& OutObject)
-//{
-//	OutObject = Cast<UNotifyBase>(NotifyClass->GetDefaultObject(true));
-//}
-
-//UNotifyBase * UNotifyBase::GetNotifyInstance(const UObject * Outer, TSubclassOf<UObject> NotifyClass)
-//{
-//	return NewObject<UNotifyBase>(&Outer, NotifyClass->GetClass());
-//}
-
-//UNotifyBase * UNotifyBase::GetNotifyInstance(const UObject* Outer, TSubclassOf<UNotifyBase> NotifyClass)
-//{
-//	//return NewObject<UNotifyBase>(Outer, NotifyClass->GetClass());
-//	FString Temp;
-//	NotifyClass->GetName(Temp);
-//	UE_LOG(LogTemp, Error, TEXT("Class name is %s"), *Temp);
-//	NotifyClass->Get();
-//	return nullptr;
-//}
 
 void UNotifyBase::SetEventForFunctionName(FuncName FunctionName, FEventCallback Delegate)
 {
 	if (mapCallback.Find(FunctionName) == NULL)
 	{
 		mapCallback.Add(FunctionName, Delegate);
-		UE_LOG(TencentVoicePlugin, Display, TEXT("%d delegate added!"), static_cast<int32>(FunctionName));
+		UE_LOG(TencentVoicePlugin, Display, TEXT("%s, %d delegate added!"), *(this->GetName()), static_cast<int32>(FunctionName));
 	}
 }
 
 void UNotifyBase::RemoveEventForFunctionName(FuncName FunctionName)
 {
 	mapCallback.Remove(FunctionName);
-	UE_LOG(TencentVoicePlugin, Display, TEXT("Remove event by %d!"), static_cast<int32>(FunctionName));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s remove event by %d!"), *(this->GetName()), static_cast<int32>(FunctionName));
 }
