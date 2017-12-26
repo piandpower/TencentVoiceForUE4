@@ -6,6 +6,7 @@ UVoiceClient* UVoiceClient::VoiceClient = nullptr;
 
 UVoiceClient::UVoiceClient()
 {
+	bTickable = false;
 	m_voiceengine = gcloud_voice::GetVoiceEngine();
 }
 
@@ -17,12 +18,11 @@ UVoiceClient::~UVoiceClient()
 void UVoiceClient::Tick(float DeltaTime)
 {
 	m_voiceengine->Poll();
-	//UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::Tick"));
 }
 
 FORCEINLINE bool UVoiceClient::IsTickable() const
 {
-	return true;
+	return bTickable;
 }
 
 FORCEINLINE TStatId UVoiceClient::GetStatId() const
@@ -38,6 +38,11 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 		VoiceClient->AddToRoot();
 	}
 	return VoiceClient;
+}
+
+void UVoiceClient::ToggleTickable(bool Tickable)
+{
+	bTickable = Tickable;
 }
 
 bool UVoiceClient::SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID)

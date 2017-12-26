@@ -42,6 +42,10 @@ public:
 		static UVoiceClient* GetVoiceClient();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// Set VoiceClient whether enable tick
+		void ToggleTickable(bool Tickable);
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set VoiceEngine AppInfo. successed return true, otherwise return false
 		bool SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID);
 
@@ -94,8 +98,10 @@ public:
 		void QuitRoom(const FString& RoomName, int32 msTimeout);
 
 private:
-	// The UVoiceClient instance handle(static)
+	// The UVoiceClient instance handle (static)
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
+	// The VoiceClient whether enable tick (default value is false)
+	bool bTickable;
 };
