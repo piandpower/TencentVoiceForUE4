@@ -18,7 +18,7 @@ void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName,
 
 	if (gcloud_voice::GV_ON_JOINROOM_SUCC == code)
 	{
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnJoinRoom);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnJoinRoom);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -30,7 +30,7 @@ void UNotifyBase::OnStatusUpdate(GCloudVoiceCompleteCode status, const char *roo
 {
 	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnStatusUpdate return code %d!"), *(this->GetName()), static_cast<int32>(status));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnStatusUpdate);
+	FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnStatusUpdate);
 	if (nullptr != TCallback)
 	{
 		TCallback->ExecuteIfBound();
@@ -43,7 +43,7 @@ void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 
 	if (gcloud_voice::GV_ON_QUITROOM_SUCC == code)
 	{
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnQuitRoom);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnQuitRoom);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -61,7 +61,7 @@ void UNotifyBase::OnMemberVoice(const char *roomName, unsigned int member, int s
 {
 	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnMemberVoice report member:%d with status:%d in room:%s"), *(this->GetName()), static_cast<int32>(member), static_cast<int32>(status), *roomName);
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnMemberVoice);
+	FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnMemberVoice);
 	if (nullptr != TCallback)
 	{
 		TCallback->ExecuteIfBound();
@@ -74,7 +74,7 @@ void UNotifyBase::OnUploadFile(GCloudVoiceCompleteCode code, const char *filePat
 
 	if (gcloud_voice::GV_ON_UPLOAD_RECORD_DONE == code)
 	{
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnUploadFile);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnUploadFile);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -88,7 +88,7 @@ void UNotifyBase::OnDownloadFile(GCloudVoiceCompleteCode code, const char *fileP
 
 	if (gcloud_voice::GV_ON_DOWNLOAD_RECORD_DONE == code)
 	{
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnDownloadFile);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnDownloadFile);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -102,7 +102,7 @@ void UNotifyBase::OnPlayRecordedFile(GCloudVoiceCompleteCode code, const char *f
 
 	if (gcloud_voice::GV_ON_PLAYFILE_DONE == code)
 	{
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnPlayRecordedFile);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnPlayRecordedFile);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -116,7 +116,7 @@ void UNotifyBase::OnApplyMessageKey(GCloudVoiceCompleteCode code)
 
 	if (gcloud_voice::GV_ON_MESSAGE_KEY_APPLIED_SUCC == code)
 	{
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnApplyMessageKey);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnApplyMessageKey);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -130,7 +130,7 @@ void UNotifyBase::OnSpeechToText(GCloudVoiceCompleteCode code, const char *fileI
 
 	/*if (gcloud_voice::GV_ON_STT_SUCC == code)
 	{*/
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnSpeechToText);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnSpeechToText);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -142,7 +142,7 @@ void UNotifyBase::OnRecording(const unsigned char* pAudioData, unsigned int nDat
 {
 	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnRecording"), *(this->GetName()));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnRecording);
+	FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnRecording);
 	if (nullptr != TCallback)
 	{
 		TCallback->ExecuteIfBound();
@@ -153,7 +153,7 @@ void UNotifyBase::OnStreamSpeechToText(GCloudVoiceCompleteCode code, int error, 
 {
 	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnStreamSpeechToText return code %d!"), *(this->GetName()), static_cast<int32>(code));
 
-	FEventCallback *TCallback = mapCallback.Find(FuncName::_OnStreamSpeechToText);
+	FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnStreamSpeechToText);
 	if (nullptr != TCallback)
 	{
 		TCallback->ExecuteIfBound();
@@ -166,7 +166,7 @@ void UNotifyBase::OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomNa
 
 	if (gcloud_voice::GV_ON_ROLE_SUCC == code)
 	{
-		FEventCallback *TCallback = mapCallback.Find(FuncName::_OnRoleChanged);
+		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnRoleChanged);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
@@ -179,7 +179,7 @@ UNotifyBase * UNotifyBase::GetNotifyInstance(TSubclassOf<UNotifyBase> NotifyClas
 	return NewObject<UNotifyBase>(NotifyClass->GetClass());
 }
 
-void UNotifyBase::SetEventForFunctionName(FuncName FunctionName, FEventCallback Delegate)
+void UNotifyBase::SetEventForFunctionName(EFunctionName FunctionName, FEventCallback Delegate)
 {
 	if (mapCallback.Find(FunctionName) == NULL)
 	{
@@ -188,7 +188,7 @@ void UNotifyBase::SetEventForFunctionName(FuncName FunctionName, FEventCallback 
 	}
 }
 
-void UNotifyBase::RemoveEventForFunctionName(FuncName FunctionName)
+void UNotifyBase::RemoveEventForFunctionName(EFunctionName FunctionName)
 {
 	mapCallback.Remove(FunctionName);
 	UE_LOG(TencentVoicePlugin, Display, TEXT("%s remove event by %d!"), *(this->GetName()), static_cast<int32>(FunctionName));

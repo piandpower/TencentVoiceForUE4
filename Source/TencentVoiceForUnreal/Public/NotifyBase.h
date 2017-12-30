@@ -17,7 +17,7 @@ DECLARE_DYNAMIC_DELEGATE(FEventCallback);
  * 
  */
 UENUM()
-enum class FuncName : uint8
+enum class EFunctionName : uint8
 {
 	_OnJoinRoom = 0,
 	_OnStatusUpdate,
@@ -65,12 +65,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set event for function name, when the callback function was called, this event will be called
-		void SetEventForFunctionName(FuncName FunctionName, UPARAM(DisplayName = "Event") FEventCallback Delegate);
+		void SetEventForFunctionName(EFunctionName FunctionName, UPARAM(DisplayName = "Event") FEventCallback Delegate);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Remove event for function name
-		void RemoveEventForFunctionName(FuncName FunctionName);
+		void RemoveEventForFunctionName(EFunctionName FunctionName);
 
 protected:
-	TMap<FuncName, FEventCallback> mapCallback;
+	TMap<EFunctionName, FEventCallback> mapCallback;
 };

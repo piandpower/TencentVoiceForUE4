@@ -62,10 +62,10 @@ void UVoiceClient::InitVoiceEngine()
 	UE_LOG(TencentVoicePlugin, Display, TEXT("InitVoiceEngine return code %d!"), static_cast<int32>(m_voiceengine->Init()));
 }
 
-void UVoiceClient::SetMode(VoiceMode VoiceModeCode)
+void UVoiceClient::SetMode(EVoiceMode VoiceMode)
 {
-	//UE_LOG(TencentVoicePlugin, Display, TEXT("SetMode return code %d!"), static_cast<int32>(static_cast<gcloud_voice::IGCloudVoiceEngine::GCloudVoiceMode>(VoiceModeCode)));
-	UE_LOG(TencentVoicePlugin, Display, TEXT("SetMode return code %d!"), static_cast<int32>(m_voiceengine->SetMode(static_cast<gcloud_voice::IGCloudVoiceEngine::GCloudVoiceMode>(VoiceModeCode))));
+	//UE_LOG(TencentVoicePlugin, Display, TEXT("SetMode return code %d!"), static_cast<int32>(static_cast<gcloud_voice::IGCloudVoiceEngine::GCloudVoiceMode>(VoiceMode)));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("SetMode return code %d!"), static_cast<int32>(m_voiceengine->SetMode(static_cast<gcloud_voice::IGCloudVoiceEngine::GCloudVoiceMode>(VoiceMode))));
 }
 
 void UVoiceClient::SetServerInfo(const FString & ServerAddr)

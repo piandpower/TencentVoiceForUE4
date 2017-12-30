@@ -14,7 +14,7 @@
  */
 
 UENUM()
-enum class VoiceMode : uint8
+enum class EVoiceMode : uint8
 {
 	RealTime = 0, // realtime mode for TeamRoom or NationalRoom
 	Messages,     // voice message mode
@@ -55,7 +55,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set engine voice mode
-		void SetMode(VoiceMode VoiceModeCode);
+		void SetMode(EVoiceMode VoiceMode);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set engine server info
