@@ -98,7 +98,7 @@ public:
 		void QuitRoom(const FString& RoomName, int32 msTimeout);
 
 private:
-	// The UVoiceClient instance handle (static)
+	// The UVoiceClient instance handle (singleton object)
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;

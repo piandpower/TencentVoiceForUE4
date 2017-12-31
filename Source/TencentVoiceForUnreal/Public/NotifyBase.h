@@ -72,5 +72,8 @@ public:
 		void RemoveEventForFunctionName(EFunctionName FunctionName);
 
 protected:
+	// The UNotifyBase instance handle (singleton object)
+	static UNotifyBase* NotifyInstance;
+	// Callback event map
 	TMap<EFunctionName, FEventCallback> mapCallback;
 };

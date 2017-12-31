@@ -2,6 +2,8 @@
 
 #include "NotifyBase.h"
 
+UNotifyBase* UNotifyBase::NotifyInstance = nullptr;
+
 UNotifyBase::UNotifyBase(const FObjectInitializer& ObjectInitializer) : UObject(ObjectInitializer)
 {
 
@@ -176,7 +178,12 @@ void UNotifyBase::OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomNa
 
 UNotifyBase * UNotifyBase::GetNotifyInstance(TSubclassOf<UNotifyBase> NotifyClass)
 {
-	return NewObject<UNotifyBase>(NotifyClass->GetClass());
+	if (nullptr == NotifyInstance)
+	{
+		NotifyInstance = NewObject<UNotifyBase>(NotifyClass->GetClass());
+		NotifyInstance->AddToRoot();
+	}
+	return NotifyInstance;
 }
 
 void UNotifyBase::SetEventForFunctionName(EFunctionName FunctionName, FEventCallback Delegate)
