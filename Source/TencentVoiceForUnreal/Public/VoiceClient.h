@@ -38,6 +38,9 @@ public:
 	virtual TStatId GetStatId() const override;
 
 public:
+	// Set thie VoiceClient room status
+	void SetRoomStatus(bool RoomStatus);
+
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
 		// Get or New a voice client instance(if not exist), (singleton object)
 		static UVoiceClient* GetVoiceClient();
@@ -45,10 +48,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set VoiceClient whether enable tick
 		void ToggleTickable(bool Tickable);
-
-	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set thie VoiceClient room status
-		void SetRoomStatus(bool RoomStatus);
 
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
 		// Get this VoiceClient room status
@@ -103,16 +102,18 @@ public:
 		void CloseSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Quit room, if successful, will callback notify OnQuitRoom function
-		void QuitRoom(const FString& RoomName, int32 msTimeout);
+		// Quit current joined room, if successful, will callback notify OnQuitRoom function
+		void QuitCurrentJoinedRoom(int32 msTimeout);
 
 private:
 	// The UVoiceClient instance handle (singleton object)
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
-	// Mark this VoiceClient whether in voice room
-	bool bRoomStatus;
 	// The VoiceClient whether enable tick (default value is false)
 	bool bTickable;
+	// Mark this VoiceClient whether in voice room (default value is false)
+	bool bRoomStatus;
+	// Current joined room name
+	FString CurrentRoomName;
 };
