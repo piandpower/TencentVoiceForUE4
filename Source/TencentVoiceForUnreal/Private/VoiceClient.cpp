@@ -4,9 +4,10 @@
 
 UVoiceClient* UVoiceClient::VoiceClient = nullptr;
 
-UVoiceClient::UVoiceClient()
+UVoiceClient::UVoiceClient(const FObjectInitializer& ObjectInitializer) : UObject(ObjectInitializer)
 {
 	bTickable = false;
+	bRoomStatus = false;
 	m_voiceengine = gcloud_voice::GetVoiceEngine();
 }
 
@@ -43,6 +44,16 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 void UVoiceClient::ToggleTickable(bool Tickable)
 {
 	bTickable = Tickable;
+}
+
+void UVoiceClient::SetRoomStatus(bool RoomStatus)
+{
+	bRoomStatus = RoomStatus;
+}
+
+bool UVoiceClient::GetRoomStatus()
+{
+	return bRoomStatus;
 }
 
 bool UVoiceClient::SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID)

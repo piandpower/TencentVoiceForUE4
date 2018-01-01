@@ -6,7 +6,7 @@ UNotifyBase* UNotifyBase::NotifyInstance = nullptr;
 
 UNotifyBase::UNotifyBase(const FObjectInitializer& ObjectInitializer) : UObject(ObjectInitializer)
 {
-
+	VoiceClient = UVoiceClient::GetVoiceClient();
 }
 
 UNotifyBase::~UNotifyBase()
@@ -20,6 +20,11 @@ void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName,
 
 	if (gcloud_voice::GV_ON_JOINROOM_SUCC == code)
 	{
+		VoiceClient->OpenMic();
+		VoiceClient->OpenSpeaker();
+
+		VoiceClient->SetRoomStatus(true);
+
 		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnJoinRoom);
 		if (nullptr != TCallback)
 		{
@@ -45,6 +50,11 @@ void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 
 	if (gcloud_voice::GV_ON_QUITROOM_SUCC == code)
 	{
+		VoiceClient->CloseMic();
+		VoiceClient->CloseSpeaker();
+
+		VoiceClient->SetRoomStatus(false);
+
 		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnQuitRoom);
 		if (nullptr != TCallback)
 		{
@@ -176,11 +186,11 @@ void UNotifyBase::OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomNa
 	}
 }
 
-UNotifyBase * UNotifyBase::GetNotifyInstance(TSubclassOf<UNotifyBase> NotifyClass)
+UNotifyBase * UNotifyBase::GetNotifyInstance()
 {
 	if (nullptr == NotifyInstance)
 	{
-		NotifyInstance = NewObject<UNotifyBase>(NotifyClass->GetClass());
+		NotifyInstance = NewObject<UNotifyBase>();
 		NotifyInstance->AddToRoot();
 	}
 	return NotifyInstance;
@@ -200,3 +210,13 @@ void UNotifyBase::RemoveEventForFunctionName(EFunctionName FunctionName)
 	mapCallback.Remove(FunctionName);
 	UE_LOG(TencentVoicePlugin, Display, TEXT("%s remove event by %d!"), *(this->GetName()), static_cast<int32>(FunctionName));
 }
+
+//UNotifyBase * UNotifyBase::NewNotifyInstance(TSubclassOf<UNotifyBase> NotifyClass)
+//{
+//	if (nullptr == NotifyInstance)
+//	{
+//		NotifyInstance = NewObject<UNotifyBase>(NotifyClass->GetClass());
+//		NotifyInstance->AddToRoot();
+//	}
+//	return NotifyInstance;
+//}

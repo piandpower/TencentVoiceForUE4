@@ -5,9 +5,10 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "GCloudVoice.h"
-#include "NotifyBase.h"
 #include "Runtime/Engine/Public/Tickable.h"
 #include "VoiceClient.generated.h"
+
+class UNotifyBase;
 
 /**
  * 
@@ -29,7 +30,7 @@ class TENCENTVOICEFORUNREAL_API UVoiceClient : public UObject, public FTickableG
 	GENERATED_BODY()
 
 public:
-	UVoiceClient();
+	UVoiceClient(const FObjectInitializer& ObjectInitializer);
 	~UVoiceClient();
 
 	virtual void Tick(float DeltaTime) override;
@@ -38,12 +39,20 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		// Get or New a voice client instance(if not exist), singleton object
+		// Get or New a voice client instance(if not exist), (singleton object)
 		static UVoiceClient* GetVoiceClient();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set VoiceClient whether enable tick
 		void ToggleTickable(bool Tickable);
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// Set thie VoiceClient room status
+		void SetRoomStatus(bool RoomStatus);
+
+	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
+		// Get this VoiceClient room status
+		bool GetRoomStatus();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set VoiceEngine AppInfo. successed return true, otherwise return false
@@ -102,6 +111,8 @@ private:
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
+	// Mark this VoiceClient whether in voice room
+	bool bRoomStatus;
 	// The VoiceClient whether enable tick (default value is false)
 	bool bTickable;
 };

@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CoreUObject.h"
+//#include "CoreUObject.h"
 #include "UObject/NoExportTypes.h"
 #include "GCloudVoice.h"
+#include "VoiceClient.h"
 #include "TencentVoiceForUnreal.h"
 #include "NotifyBase.generated.h"
 
@@ -60,8 +61,8 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		// Get your notify or callback instance. (This function always returns NewObject!)
-		static UNotifyBase* GetNotifyInstance(TSubclassOf<UNotifyBase> NotifyClass);
+		// Return current notify instance (singleton object)
+		static UNotifyBase* GetNotifyInstance();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set event for function name, when the callback function was called, this event will be called
@@ -71,9 +72,15 @@ public:
 		// Remove event for function name
 		void RemoveEventForFunctionName(EFunctionName FunctionName);
 
+	//UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
+	//	// New a notify instance (singleton object)
+	//	static UNotifyBase* NewNotifyInstance(TSubclassOf<UNotifyBase> NotifyClass);
+
 protected:
 	// The UNotifyBase instance handle (singleton object)
 	static UNotifyBase* NotifyInstance;
 	// Callback event map
 	TMap<EFunctionName, FEventCallback> mapCallback;
+	// The VoiceClient instance handle
+	class UVoiceClient* VoiceClient;
 };
