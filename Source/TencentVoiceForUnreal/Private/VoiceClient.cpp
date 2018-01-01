@@ -109,16 +109,9 @@ bool UVoiceClient::SetNotify(UNotifyBase* NotifyInstance)
 
 void UVoiceClient::JoinTeamRoom(const FString & RoomName, int32 msTimeout)
 {
-	if (bRoomStatus)
-	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::JoinTeamRoom report : Already joined the voice room"));
-	}
-	else
-	{
-		CurrentRoomName = RoomName;
+	CurrentRoomName = RoomName;
 
-		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
-	}
+	UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
 }
 
 void UVoiceClient::OpenMic()
@@ -143,14 +136,10 @@ void UVoiceClient::CloseSpeaker()
 
 void UVoiceClient::QuitCurrentJoinedRoom(int32 msTimeout)
 {
-	if (bRoomStatus)
+	if (!CurrentRoomName.Equals(""))
 	{
 		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitCurrentJoinedRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*CurrentRoomName), msTimeout)));
 
 		CurrentRoomName = "";
-	}
-	else
-	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitCurrentJoinedRoom report : No voice room is currently available"));
-	}
+	}	
 }
