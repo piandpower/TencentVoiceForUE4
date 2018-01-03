@@ -6,7 +6,6 @@ UVoiceClient* UVoiceClient::VoiceClient = nullptr;
 
 UVoiceClient::UVoiceClient(const FObjectInitializer& ObjectInitializer) : UObject(ObjectInitializer)
 {
-	bTickable = false;
 	bRoomStatus = false;
 	CurrentRoomName = "";
 	m_voiceengine = gcloud_voice::GetVoiceEngine();
@@ -24,7 +23,7 @@ void UVoiceClient::Tick(float DeltaTime)
 
 FORCEINLINE bool UVoiceClient::IsTickable() const
 {
-	return bTickable;
+	return bRoomStatus;
 }
 
 FORCEINLINE TStatId UVoiceClient::GetStatId() const
@@ -40,11 +39,6 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 		VoiceClient->AddToRoot();
 	}
 	return VoiceClient;
-}
-
-void UVoiceClient::ToggleTickable(bool Tickable)
-{
-	bTickable = Tickable;
 }
 
 void UVoiceClient::SetRoomStatus(bool RoomStatus)
@@ -109,9 +103,13 @@ bool UVoiceClient::SetNotify(UNotifyBase* NotifyInstance)
 
 void UVoiceClient::JoinTeamRoom(const FString & RoomName, int32 msTimeout)
 {
-	CurrentRoomName = RoomName;
+	if (!bRoomStatus)
+	{
+		this->SetRoomStatus(true);
+		CurrentRoomName = RoomName;
 
-	UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+	}
 }
 
 void UVoiceClient::OpenMic()
@@ -136,7 +134,7 @@ void UVoiceClient::CloseSpeaker()
 
 void UVoiceClient::QuitCurrentJoinedRoom(int32 msTimeout)
 {
-	if (!CurrentRoomName.Equals(""))
+	if (bRoomStatus)
 	{
 		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitCurrentJoinedRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*CurrentRoomName), msTimeout)));
 

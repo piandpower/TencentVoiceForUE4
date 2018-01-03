@@ -45,10 +45,6 @@ public:
 		// Get or New a voice client instance(if not exist), (singleton object)
 		static UVoiceClient* GetVoiceClient();
 
-	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set VoiceClient whether enable tick
-		void ToggleTickable(bool Tickable);
-
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
 		// Get this VoiceClient room status
 		bool GetRoomStatus();
@@ -110,8 +106,6 @@ private:
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
-	// The VoiceClient whether enable tick (default value is false)
-	bool bTickable;
 	// Mark this VoiceClient whether in voice room (default value is false)
 	bool bRoomStatus;
 	// Current joined room name

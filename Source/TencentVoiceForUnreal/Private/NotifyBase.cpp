@@ -23,13 +23,15 @@ void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName,
 		VoiceClient->OpenMic();
 		VoiceClient->OpenSpeaker();
 
-		VoiceClient->SetRoomStatus(true);
-
 		FEventCallback *TCallback = mapCallback.Find(EFunctionName::_OnJoinRoom);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
 		}
+	}
+	else
+	{
+		VoiceClient->SetRoomStatus(false);
 	}
 }
 
