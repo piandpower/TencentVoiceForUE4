@@ -111,7 +111,14 @@ public class TencentVoiceForUnreal : ModuleRules
 
         if (!File.Exists(Path.Combine(binariesDir, filename)))
         {
-            File.Copy(Filepath, Path.Combine(binariesDir, filename), true);
+            try
+            {
+                File.Copy(Filepath, Path.Combine(binariesDir, filename), true);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Copy dll exception, ", e.ToString());
+            }
         }
     }
 }

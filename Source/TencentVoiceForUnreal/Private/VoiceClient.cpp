@@ -132,6 +132,25 @@ void UVoiceClient::CloseSpeaker()
 	UE_LOG(TencentVoicePlugin, Display, TEXT("CloseSpeaker return code %d!"), static_cast<int32>(m_voiceengine->CloseSpeaker()));
 }
 
+bool UVoiceClient::EnableMultiRoom(bool bEnable)
+{
+	if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->EnableMultiRoom(bEnable))
+	{
+		return true;
+	}
+	return false;
+}
+
+void UVoiceClient::SetMicVolume(int vol)
+{
+	UE_LOG(TencentVoicePlugin, Display, TEXT("SetMicVolume return code %d!"), static_cast<int32>(m_voiceengine->SetMicVolume(vol)));
+}
+
+void UVoiceClient::SetSpeakerVolume(int vol)
+{
+	UE_LOG(TencentVoicePlugin, Display, TEXT("SetSpeakerVolume return code %d!"), static_cast<int32>(m_voiceengine->SetSpeakerVolume(vol)));
+}
+
 void UVoiceClient::QuitCurrentJoinedRoom(int32 msTimeout)
 {
 	if (bRoomStatus)

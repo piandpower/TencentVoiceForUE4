@@ -98,6 +98,18 @@ public:
 		void CloseSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// Enable a voice client join in multi rooms, ture for open and false for close, if success return true, failed return false.
+		bool EnableMultiRoom(bool bEnable);
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// Set voice client Mic volume
+		void SetMicVolume(int vol);
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		// Set voice client Speaker volume
+		void SetSpeakerVolume(int vol);
+
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Quit current joined room, if successful, will callback notify OnQuitRoom function
 		void QuitCurrentJoinedRoom(int32 msTimeout);
 
