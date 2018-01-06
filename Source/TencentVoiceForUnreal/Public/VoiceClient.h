@@ -38,32 +38,67 @@ public:
 	virtual TStatId GetStatId() const override;
 
 public:
-	// Set thie VoiceClient room status
+
+	/** 
+	 * Set thie voice room state
+	 *
+	 * @param RoomStatus Mark this VoiceClient whether in voice room, true for in room and false for out room.
+	 */
 	void SetRoomStatus(bool RoomStatus);
+
+	/**
+	 * Add a room name to JoinedRoomName
+	 *
+	 * @param RoomName The room name need to add
+	 */
+	void AddJoinedRoomName(const FString& RoomName);
+
+	/**
+	 * Remove a room name from JoinedRoomName
+	 *
+	 * @Param RoomName The room name need to remove
+	 */
+	void RemoveJoinedRoomName(const FString& RoomName);
 
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
 		// Get or New a voice client instance(if not exist), (singleton object)
 		static UVoiceClient* GetVoiceClient();
 
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		// Get this VoiceClient room status
+		/** 
+		 * Get the specify voice room state
+		 *
+		 * @param RoomName The specify room name
+		 * @return The specify room state
+		 */
 		bool GetRoomStatus();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set VoiceEngine AppInfo. successed return true, otherwise return false
+		/**
+		 * Set VoiceEngine AppInfo.
+		 *
+		 * @param appID your game ID from gcloud.qq.com
+		 * @param appKey your game key from gcloud.qq.com
+		 * @param openID player's openID from QQ or Wechat. or a unit role ID.
+		 * @param return successed return true, otherwise return false
+		 */
 		bool SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Initialise engine
+		// Init the voice engine.
 		void InitVoiceEngine();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set engine voice mode
+		/**
+		 * Set the mode for engine
+		 *
+		 * @param VoiceMoede Mode to set
+		 */
 		void SetMode(EVoiceMode VoiceMode);
 
-	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+	//UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set engine server info
-		void SetServerInfo(const FString& ServerAddr);
+		//void SetServerInfo(const FString& ServerAddr);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// On application pause
@@ -74,11 +109,20 @@ public:
 		void OnResume();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set your Notify or Callback, successed return true, otherwise return false.
+		/**
+		 * Set the Notify to engine, successed return true, otherwise return false.
+		 *
+		 * @param NotifyInstance The notify
+		 */
 		bool SetNotify(UNotifyBase* NotifyInstance);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Join team room. if successful, will callback notify OnJoinRoom function
+		/**
+		 * Join team room. if successful, will callback notify OnJoinRoom function
+		 *
+		 * @param RoomName the room to join
+         * @param msTimeout time for join, it is micro second. value range[5000, 60000]
+		 */
 		void JoinTeamRoom(const FString& RoomName, int32 msTimeout);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
@@ -98,28 +142,46 @@ public:
 		void CloseSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Enable a voice client join in multi rooms, ture for open and false for close, if success return true, failed return false.
+		/**
+		 * Enable a voice client join in multi rooms.
+		 *
+		 * @param bEnable true for open and false for close.
+		 * @return if success return true, failed return false.
+		 */
 		bool EnableMultiRoom(bool bEnable);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set voice client Mic volume
+		/**
+		 * Set voice client Mic volume
+		 *
+		 * @param vol The SDK document does not mention this parameter. 
+		 */
 		void SetMicVolume(int vol);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set voice client Speaker volume
+		/**
+		 * Set voice client Speaker volume.
+		 *
+		 * @param vol Android & IOS, value range is 0-800, 100 means original voice volume, 50 means only 1/2 original voice volume,  200 means double original voice volume. Windows value range is 0x0 - 0xFFFF, suggested value bigger than 0xff00, then you can hear you speaker sound
+		 */ 
 		void SetSpeakerVolume(int vol);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Quit current joined room, if successful, will callback notify OnQuitRoom function
-		void QuitCurrentJoinedRoom(int32 msTimeout);
+		/**
+		 * Quit the specify voice room, if successful, will callback notify OnQuitRoom function
+		 *
+		 * @param RoomName The voice room want to quit
+		 * @param msTimeout time for quit, it is micro second. value range[5000, 60000]
+		 */
+		void QuitRoom(const FString& RoomName, int32 msTimeout);
 
 private:
 	// The UVoiceClient instance handle (singleton object)
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
-	// Mark this VoiceClient whether in voice room (default value is false)
+	// Mark this VoiceClient whether tickable (default value is false)
 	bool bRoomStatus;
-	// Current joined room name
-	FString CurrentRoomName;
+	// This array storage the voice client has joined room name
+	TArray<FString> JoinedRoomName;
 };

@@ -80,7 +80,7 @@ protected:
 	// The UNotifyBase instance handle (singleton object)
 	static UNotifyBase* NotifyInstance;
 	// Callback event map
-	TMap<EFunctionName, FEventCallback> mapCallback;
+	TMap<EFunctionName, FEventCallback> CallbackMap;
 	// The VoiceClient instance handle
 	class UVoiceClient* VoiceClient;
 };

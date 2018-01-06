@@ -7,7 +7,7 @@ UVoiceClient* UVoiceClient::VoiceClient = nullptr;
 UVoiceClient::UVoiceClient(const FObjectInitializer& ObjectInitializer) : UObject(ObjectInitializer)
 {
 	bRoomStatus = false;
-	CurrentRoomName = "";
+	JoinedRoomName.Empty();
 	m_voiceengine = gcloud_voice::GetVoiceEngine();
 }
 
@@ -31,6 +31,16 @@ FORCEINLINE TStatId UVoiceClient::GetStatId() const
 	return TStatId();
 }
 
+void UVoiceClient::RemoveJoinedRoomName(const FString & RoomName)
+{
+	JoinedRoomName.Remove(RoomName);
+
+	if (JoinedRoomName.Num() == 0)
+	{
+		bRoomStatus = false;
+	}
+}
+
 UVoiceClient * UVoiceClient::GetVoiceClient()
 {
 	if (nullptr == VoiceClient)
@@ -44,6 +54,11 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 void UVoiceClient::SetRoomStatus(bool RoomStatus)
 {
 	bRoomStatus = RoomStatus;
+}
+
+void UVoiceClient::AddJoinedRoomName(const FString & RoomName)
+{
+	JoinedRoomName.Add(RoomName);
 }
 
 bool UVoiceClient::GetRoomStatus()
@@ -74,10 +89,10 @@ void UVoiceClient::SetMode(EVoiceMode VoiceMode)
 	UE_LOG(TencentVoicePlugin, Display, TEXT("SetMode return code %d!"), static_cast<int32>(m_voiceengine->SetMode(static_cast<gcloud_voice::IGCloudVoiceEngine::GCloudVoiceMode>(VoiceMode))));
 }
 
-void UVoiceClient::SetServerInfo(const FString & ServerAddr)
-{
-	UE_LOG(TencentVoicePlugin, Display, TEXT("SetServerInfo return code %d!"), static_cast<int32>(m_voiceengine->SetServerInfo(TCHAR_TO_ANSI(*ServerAddr))));
-}
+//void UVoiceClient::SetServerInfo(const FString & ServerAddr)
+//{
+//	UE_LOG(TencentVoicePlugin, Display, TEXT("SetServerInfo return code %d!"), static_cast<int32>(m_voiceengine->SetServerInfo(TCHAR_TO_ANSI(*ServerAddr))));
+//}
 
 void UVoiceClient::OnPause()
 {
@@ -103,13 +118,17 @@ bool UVoiceClient::SetNotify(UNotifyBase* NotifyInstance)
 
 void UVoiceClient::JoinTeamRoom(const FString & RoomName, int32 msTimeout)
 {
-	if (!bRoomStatus)
+	if (!JoinedRoomName.Contains(RoomName))
+	{
+		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+	}
+	/*if (!bRoomStatus)
 	{
 		this->SetRoomStatus(true);
 		CurrentRoomName = RoomName;
 
 		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
-	}
+	}*/
 }
 
 void UVoiceClient::OpenMic()
@@ -134,7 +153,10 @@ void UVoiceClient::CloseSpeaker()
 
 bool UVoiceClient::EnableMultiRoom(bool bEnable)
 {
-	if (gcloud_voice::GCLOUD_VOICE_SUCC == m_voiceengine->EnableMultiRoom(bEnable))
+	gcloud_voice::GCloudVoiceErrno ErrorCode = m_voiceengine->EnableMultiRoom(bEnable);
+
+	UE_LOG(TencentVoicePlugin, Display, TEXT("EnableMultiRoom return code %d!"), static_cast<int32>(ErrorCode));
+	if (gcloud_voice::GCLOUD_VOICE_SUCC == ErrorCode)
 	{
 		return true;
 	}
@@ -151,12 +173,10 @@ void UVoiceClient::SetSpeakerVolume(int vol)
 	UE_LOG(TencentVoicePlugin, Display, TEXT("SetSpeakerVolume return code %d!"), static_cast<int32>(m_voiceengine->SetSpeakerVolume(vol)));
 }
 
-void UVoiceClient::QuitCurrentJoinedRoom(int32 msTimeout)
+void UVoiceClient::QuitRoom(const FString & RoomName, int32 msTimeout)
 {
-	if (bRoomStatus)
+	if (JoinedRoomName.Contains(RoomName))
 	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitCurrentJoinedRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*CurrentRoomName), msTimeout)));
-
-		CurrentRoomName = "";
-	}	
+		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitCurrentJoinedRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+	}
 }
