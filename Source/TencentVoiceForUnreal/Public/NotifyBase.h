@@ -69,16 +69,21 @@ public:
 		static UNotifyBase* GetNotifyInstance();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set event for function name, when the callback function was called, this event will be called
 		/**
-		 * Set event for specify function name
+		 * Set event for specify function name, when the callback function was called, this event will be called
 		 *
-		 * @param FunctionName 
+		 * @param FunctionName The function that you want to set event
+		 * @param Delegate The event you want to set
 		 */
 		void SetEventForFunctionName(EFunctionName FunctionName, UPARAM(DisplayName = "Event") FEventCallback Delegate);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Remove event for function name
+		/**
+		 * Remove event for function name
+		 *
+		 * @param FunctionName The function thar you want to remove event
+		 */
 		void RemoveEventForFunctionName(EFunctionName FunctionName);
 
 	//UFUNCTION(BlueprintPure, Category = "Voice Plug-in")

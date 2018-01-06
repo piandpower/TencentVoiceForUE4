@@ -61,15 +61,18 @@ public:
 	void RemoveJoinedRoomName(const FString& RoomName);
 
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		// Get or New a voice client instance(if not exist), (singleton object)
+		/**
+		 * Get or New a voice client instance(if not exist), singleton object.
+		 *
+		 * @return UVoiceClient pointer
+		 */
 		static UVoiceClient* GetVoiceClient();
 
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
 		/** 
-		 * Get the specify voice room state
+		 * Get the voice room state
 		 *
-		 * @param RoomName The specify room name
-		 * @return The specify room state
+		 * @return The voice client whether in voice room
 		 */
 		bool GetRoomStatus();
 
@@ -80,12 +83,14 @@ public:
 		 * @param appID your game ID from gcloud.qq.com
 		 * @param appKey your game key from gcloud.qq.com
 		 * @param openID player's openID from QQ or Wechat. or a unit role ID.
-		 * @param return successed return true, otherwise return false
+		 * @return successed return true, otherwise return false
 		 */
 		bool SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Init the voice engine.
+		/**
+		 * Init the voice engine.
+		 */
 		void InitVoiceEngine();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
@@ -101,18 +106,23 @@ public:
 		//void SetServerInfo(const FString& ServerAddr);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// On application pause
+		/**
+		 * On application pause
+		 */
 		void OnPause();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// On application resume
+		/**
+		 * On application resume
+		 */
 		void OnResume();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		/**
-		 * Set the Notify to engine, successed return true, otherwise return false.
+		 * Set the Notify to engine.
 		 *
-		 * @param NotifyInstance The notify
+		 * @param NotifyInstance The notify pointer
+		 * @return successed return true, otherwise return false.
 		 */
 		bool SetNotify(UNotifyBase* NotifyInstance);
 
@@ -126,19 +136,27 @@ public:
 		void JoinTeamRoom(const FString& RoomName, int32 msTimeout);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Open Microphone
+		/**
+		 * Open Microphone
+		 */
 		void OpenMic();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Close Microphone
+		/**
+		 * Close Microphone
+		 */
 		void CloseMic();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Open speaker
+		/**
+		 * Open speaker
+		 */
 		void OpenSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Close speaker
+		/**
+		 * Close speaker
+		 */
 		void CloseSpeaker();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
