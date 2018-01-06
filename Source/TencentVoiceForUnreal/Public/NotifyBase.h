@@ -61,11 +61,20 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		// Return current notify instance (singleton object)
+		/**
+		 * Get the notify instance (singleton object)
+		 *
+		 * @return UNotifyBase pointer 
+		 */
 		static UNotifyBase* GetNotifyInstance();
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		// Set event for function name, when the callback function was called, this event will be called
+		/**
+		 * Set event for specify function name
+		 *
+		 * @param FunctionName 
+		 */
 		void SetEventForFunctionName(EFunctionName FunctionName, UPARAM(DisplayName = "Event") FEventCallback Delegate);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
