@@ -193,6 +193,14 @@ public:
 		 */
 		void QuitRoom(const FString& RoomName, int32 msTimeout);
 
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		/**
+		 * Quit the voice client all joined voice room
+		 *
+		 * @param msTimeout Time for quit, it is micro second. value range[5000, 60000]
+		 */
+		void QuitAllRoom(int32 msTimeout);
+
 private:
 	// The UVoiceClient instance handle (singleton object)
 	static UVoiceClient* VoiceClient;

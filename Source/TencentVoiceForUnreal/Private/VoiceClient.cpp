@@ -200,6 +200,14 @@ void UVoiceClient::QuitRoom(const FString & RoomName, int32 msTimeout)
 {
 	if (JoinedRoomName.Contains(RoomName))
 	{
-		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitCurrentJoinedRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+	}
+}
+
+void UVoiceClient::QuitAllRoom(int32 msTimeout)
+{
+	for (auto& Iterator : JoinedRoomName)
+	{
+		UE_LOG(TencentVoicePlugin, Display, TEXT("UVoiceClient::QuitAllRoom return code %d!"), static_cast<int32>(m_voiceengine->QuitRoom(TCHAR_TO_ANSI(*Iterator), msTimeout)));
 	}
 }
