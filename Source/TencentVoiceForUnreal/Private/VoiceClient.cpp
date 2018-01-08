@@ -31,16 +31,6 @@ FORCEINLINE TStatId UVoiceClient::GetStatId() const
 	return TStatId();
 }
 
-void UVoiceClient::RemoveJoinedRoomName(const FString & RoomName)
-{
-	JoinedRoomName.Remove(RoomName);
-
-	if (JoinedRoomName.Num() == 0)
-	{
-		bRoomStatus = false;
-	}
-}
-
 UVoiceClient * UVoiceClient::GetVoiceClient()
 {
 	if (nullptr == VoiceClient)
@@ -58,7 +48,36 @@ void UVoiceClient::SetRoomStatus(bool RoomStatus)
 
 void UVoiceClient::AddJoinedRoomName(const FString & RoomName)
 {
-	JoinedRoomName.Add(RoomName);
+	if (JoinedRoomName.Num() == 0)
+	{
+		OpenMic();
+		OpenSpeaker();
+	}
+
+	if (!JoinedRoomName.Contains(RoomName))
+	{
+		JoinedRoomName.Add(RoomName);
+
+		UE_LOG(TencentVoicePlugin, Display, TEXT("Joined room name added %s!"), *RoomName);
+	}
+}
+
+void UVoiceClient::RemoveJoinedRoomName(const FString & RoomName)
+{
+	if (JoinedRoomName.Contains(RoomName))
+	{
+		JoinedRoomName.Remove(RoomName);
+
+		UE_LOG(TencentVoicePlugin, Display, TEXT("Joined room name removed %s!"), *RoomName);
+	}
+
+	if (JoinedRoomName.Num() == 0)
+	{
+		CloseMic();
+		CloseSpeaker();
+
+		bRoomStatus = false;
+	}
 }
 
 bool UVoiceClient::GetRoomStatus()
@@ -120,7 +139,11 @@ void UVoiceClient::JoinTeamRoom(const FString & RoomName, int32 msTimeout)
 {
 	if (!JoinedRoomName.Contains(RoomName))
 	{
+		bRoomStatus = true;
+
 		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
+
+		AddJoinedRoomName(RoomName);
 	}
 	/*if (!bRoomStatus)
 	{

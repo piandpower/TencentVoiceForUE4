@@ -78,7 +78,6 @@ public:
 		void SetEventForFunctionName(EFunctionName FunctionName, UPARAM(DisplayName = "Event") FEventCallback Delegate);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Remove event for function name
 		/**
 		 * Remove event for function name
 		 *

@@ -21,13 +21,6 @@ void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName,
 
 	if (gcloud_voice::GV_ON_JOINROOM_SUCC == code)
 	{
-		VoiceClient->SetRoomStatus(true);
-
-		VoiceClient->OpenMic();
-		VoiceClient->OpenSpeaker();
-
-		VoiceClient->AddJoinedRoomName(FString(ANSI_TO_TCHAR(roomName)));
-
 		FEventCallback *TCallback = CallbackMap.Find(EFunctionName::_OnJoinRoom);
 		if (nullptr != TCallback)
 		{
@@ -53,9 +46,6 @@ void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 
 	if (gcloud_voice::GV_ON_QUITROOM_SUCC == code)
 	{
-		VoiceClient->CloseMic();
-		VoiceClient->CloseSpeaker();
-
 		VoiceClient->RemoveJoinedRoomName(FString(ANSI_TO_TCHAR(roomName)));
 
 		FEventCallback *TCallback = CallbackMap.Find(EFunctionName::_OnQuitRoom);
