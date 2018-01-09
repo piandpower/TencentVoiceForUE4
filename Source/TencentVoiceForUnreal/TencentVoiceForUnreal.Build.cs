@@ -9,12 +9,10 @@ public class TencentVoiceForUnreal : ModuleRules
 	public TencentVoiceForUnreal(ReadOnlyTargetRules Target) : base(Target)
 	{
 		PCHUsage = ModuleRules.PCHUsageMode.UseExplicitOrSharedPCHs;
-        //Type = ModuleType.External;
 
         PublicIncludePaths.AddRange(
 			new string[] {
 				"TencentVoiceForUnreal/Public",
-                //Path.Combine(ThirdPartyPath,"include")
 				// ... add public include paths required here ...
 			}
 			);
@@ -24,7 +22,6 @@ public class TencentVoiceForUnreal : ModuleRules
 			new string[] {
 				"TencentVoiceForUnreal/Private",
 				// ... add other private include paths required here ...
-                Path.Combine(ThirdPartyPath,"include")
             }
 			);
 			
@@ -34,7 +31,8 @@ public class TencentVoiceForUnreal : ModuleRules
 			{
 				"Core",
 				// ... add other public dependencies that you statically link with here ...
-			}
+                "Projects"
+            }
 			);
 			
 		
@@ -45,7 +43,6 @@ public class TencentVoiceForUnreal : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-                "Projects"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
@@ -74,11 +71,15 @@ public class TencentVoiceForUnreal : ModuleRules
     private bool LoadThirdParty(ReadOnlyTargetRules Target)
     {
         bool isLibrarySupported = false;
-        if (Target.Platform == UnrealTargetPlatform.Win64)
+        if (Target.Platform == UnrealTargetPlatform.Win32 || Target.Platform == UnrealTargetPlatform.Win64)
         {
             isLibrarySupported = true;
 
-            string LibPath = Path.Combine(ThirdPartyPath, "lib");
+            string OSVersion = (Target.Platform == UnrealTargetPlatform.Win32) ? "x86" : "x64";
+
+            PrivateIncludePaths.Add(Path.Combine(ThirdPartyPath, OSVersion, "include"));
+
+            string LibPath = Path.Combine(ThirdPartyPath, OSVersion, "lib");
             //string DllPath = Path.Combine(ThirdPartyPath, "dll");
             //System.Console.WriteLine(Path.Combine(LibPath, "GCloudVoice.dll"));
 
