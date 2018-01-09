@@ -41,11 +41,6 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 	return VoiceClient;
 }
 
-void UVoiceClient::SetRoomStatus(bool RoomStatus)
-{
-	bRoomStatus = RoomStatus;
-}
-
 void UVoiceClient::AddJoinedRoomName(const FString & RoomName)
 {
 	if (JoinedRoomName.Num() == 0)
@@ -56,7 +51,7 @@ void UVoiceClient::AddJoinedRoomName(const FString & RoomName)
 
 	if (!JoinedRoomName.Contains(RoomName))
 	{
-		JoinedRoomName.Add(RoomName);
+		JoinedRoomName.Emplace(RoomName);
 
 		UE_LOG(TencentVoicePlugin, Display, TEXT("Joined room name added %s!"), *RoomName);
 	}
@@ -108,10 +103,10 @@ void UVoiceClient::SetMode(EVoiceMode VoiceMode)
 	UE_LOG(TencentVoicePlugin, Display, TEXT("SetMode return code %d!"), static_cast<int32>(m_voiceengine->SetMode(static_cast<gcloud_voice::IGCloudVoiceEngine::GCloudVoiceMode>(VoiceMode))));
 }
 
-//void UVoiceClient::SetServerInfo(const FString & ServerAddr)
-//{
-//	UE_LOG(TencentVoicePlugin, Display, TEXT("SetServerInfo return code %d!"), static_cast<int32>(m_voiceengine->SetServerInfo(TCHAR_TO_ANSI(*ServerAddr))));
-//}
+void UVoiceClient::SetServerInfo(const FString & ServerAddr)
+{
+	UE_LOG(TencentVoicePlugin, Display, TEXT("SetServerInfo return code %d!"), static_cast<int32>(m_voiceengine->SetServerInfo(TCHAR_TO_ANSI(*ServerAddr))));
+}
 
 void UVoiceClient::OnPause()
 {

@@ -47,8 +47,6 @@ public:
 	virtual void OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName, int memberID) override;
 	virtual void OnStatusUpdate(GCloudVoiceCompleteCode status, const char *roomName, int memberID) override;
 	virtual void OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName) override;
-	// This function deprecate from GVoice 1.1.14
-	//virtual void OnMemberVoice(const unsigned int *members, int count) override;
 	virtual void OnMemberVoice(const char *roomName, unsigned int member, int status) override;
 	virtual void OnUploadFile(GCloudVoiceCompleteCode code, const char *filePath, const char *fileID) override;
 	virtual void OnDownloadFile(GCloudVoiceCompleteCode code, const char *filePath, const char *fileID) override;

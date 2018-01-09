@@ -27,6 +27,10 @@ void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName,
 			TCallback->ExecuteIfBound();
 		}
 	}
+	else
+	{
+		VoiceClient->RemoveJoinedRoomName(FString(ANSI_TO_TCHAR(roomName)));
+	}
 }
 
 void UNotifyBase::OnStatusUpdate(GCloudVoiceCompleteCode status, const char *roomName, int memberID)
@@ -55,12 +59,6 @@ void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 		}
 	}
 }
-
-// This function deprecate from GVoice 1.1.14
-//void UNotifyBase::OnMemberVoice(const unsigned int *members, int count)
-//{
-//	UE_LOG(TencentVoicePlugin, Display, TEXT("UNotifyBase::OnMemberVoice"));
-//}
 
 void UNotifyBase::OnMemberVoice(const char *roomName, unsigned int member, int status)
 {

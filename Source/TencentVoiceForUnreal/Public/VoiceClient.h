@@ -38,14 +38,6 @@ public:
 	virtual TStatId GetStatId() const override;
 
 public:
-
-	/** 
-	 * Set thie voice room state
-	 *
-	 * @param RoomStatus Mark this VoiceClient whether in voice room, true for in room and false for out room.
-	 */
-	void SetRoomStatus(bool RoomStatus);
-
 	/**
 	 * Add a room name to JoinedRoomName
 	 *
@@ -101,9 +93,12 @@ public:
 		 */
 		void SetMode(EVoiceMode VoiceMode);
 
-	//UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		// Set engine server info
-		//void SetServerInfo(const FString& ServerAddr);
+	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
+		 /**
+		  * Set the server address, just used for foreign game,such as Korea, Europe...
+		  * @param ServerAddr url of server
+		  */
+		void SetServerInfo(const FString& ServerAddr);
 
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		/**
@@ -206,7 +201,7 @@ private:
 	static UVoiceClient* VoiceClient;
 	// The TencentVoiceEngine handle
 	class gcloud_voice::IGCloudVoiceEngine* m_voiceengine;
-	// Mark this VoiceClient whether tickable (default value is false)
+	// Markup this VoiceClient whether joined voice room and tickable (default value is false)
 	bool bRoomStatus;
 	// This array storage the voice client has joined room name
 	TArray<FString> JoinedRoomName;
