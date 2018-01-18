@@ -132,21 +132,28 @@ bool UVoiceClient::SetNotify(UNotifyBase* NotifyInstance)
 
 void UVoiceClient::JoinTeamRoom(const FString & RoomName, int32 msTimeout)
 {
-	if (!JoinedRoomName.Contains(RoomName))
+	if (JoinedRoomName.Num() == 0)
 	{
 		bRoomStatus = true;
-
-		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
-
-		AddJoinedRoomName(RoomName);
 	}
-	/*if (!bRoomStatus)
-	{
-		this->SetRoomStatus(true);
-		CurrentRoomName = RoomName;
 
+	if (!JoinedRoomName.Contains(RoomName))
+	{
 		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinTeamRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinTeamRoom(TCHAR_TO_ANSI(*RoomName), msTimeout)));
-	}*/
+	}
+}
+
+void UVoiceClient::JoinNationalRoom(const FString & RoomName, EVoiceMemberRole MemberRole, int32 msTimeout)
+{
+	if (JoinedRoomName.Num() == 0)
+	{
+		bRoomStatus = true;
+	}
+
+	if (!JoinedRoomName.Contains(RoomName))
+	{
+		UE_LOG(TencentVoicePlugin, Display, TEXT("JoinNationalRoom return code %d!"), static_cast<int32>(m_voiceengine->JoinNationalRoom(TCHAR_TO_ANSI(*RoomName), static_cast<gcloud_voice::IGCloudVoiceEngine::GCloudVoiceMemberRole>(MemberRole), msTimeout)));
+	}
 }
 
 void UVoiceClient::OpenMic()

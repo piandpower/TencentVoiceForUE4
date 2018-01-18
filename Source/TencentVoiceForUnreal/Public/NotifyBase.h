@@ -20,18 +20,18 @@ DECLARE_DYNAMIC_DELEGATE(FEventCallback);
 UENUM()
 enum class EFunctionName : uint8
 {
-	_OnJoinRoom = 0,
-	_OnStatusUpdate,
-	_OnQuitRoom,
-	_OnMemberVoice,
-	_OnUploadFile,
-	_OnDownloadFile,
-	_OnPlayRecordedFile,
-	_OnApplyMessageKey,
-	_OnSpeechToText,
-	_OnRecording,
-	_OnStreamSpeechToText,
-	_OnRoleChanged
+	EOnJoinRoom				UMETA(DisplayName="OnJoinRoom"),
+	EOnStatusUpdate			UMETA(DisplayName="OnStatusUpdate"),
+	EOnQuitRoom				UMETA(DisplayName="OnQuitRoom"),
+	EOnMemberVoice			UMETA(DisplayName="OnMemberVoice"),
+	EOnUploadFile			UMETA(DisplayName="OnUploadFile"),
+	EOnDownloadFile			UMETA(DisplayName="OnDownloadFile"),
+	EOnPlayRecordedFile		UMETA(DisplayName="OnPlayRecordedFile"),
+	EOnApplyMessageKey		UMETA(DisplayName="OnApplyMessageKey"),
+	EOnSpeechToText			UMETA(DisplayName="OnSpeechToText"),
+	EOnRecording			UMETA(DisplayName="OnRecording"),
+	EOnStreamSpeechToText	UMETA(DisplayName="OnStreamSpeechToText"),
+	EOnRoleChanged			UMETA(DisplayName="OnRoleChanged")
 };
 
 UCLASS(BlueprintType)
@@ -58,29 +58,30 @@ public:
 	virtual void OnRoleChanged(GCloudVoiceCompleteCode code, const char *roomName, int memberID, int role) override;
 
 public:
+	/**
+	 * Get the notify instance (singleton object)
+	 *
+	 * @return UNotifyBase pointer
+	 */
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		/**
-		 * Get the notify instance (singleton object)
-		 *
-		 * @return UNotifyBase pointer 
-		 */
 		static UNotifyBase* GetNotifyInstance();
 
+	/**
+	 * Set event for specify function name, when the callback function was called and successed, this event will be called
+	 *
+	 * @param FunctionName The function that you want to set event
+	 * @param Delegate The event you want to set
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		/**
-		 * Set event for specify function name, when the callback function was called, this event will be called
-		 *
-		 * @param FunctionName The function that you want to set event
-		 * @param Delegate The event you want to set
-		 */
 		void SetEventForFunctionName(EFunctionName FunctionName, UPARAM(DisplayName = "Event") FEventCallback Delegate);
 
+	/**
+	 * Remove event for function name
+	 *
+	 * @param FunctionName The function thar you want to remove event
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
-		/**
-		 * Remove event for function name
-		 *
-		 * @param FunctionName The function thar you want to remove event
-		 */
+		
 		void RemoveEventForFunctionName(EFunctionName FunctionName);
 
 	//UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
