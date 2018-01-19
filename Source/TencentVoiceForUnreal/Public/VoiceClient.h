@@ -75,12 +75,12 @@ public:
 		static UVoiceClient* GetVoiceClient();
 
 	/**
-	 * Get the voice room state
+	 * Get this voice client status
 	 *
-	 * @return The voice client whether in voice room
+	 * @return This voice client whether in voice room
 	 */
 	UFUNCTION(BlueprintPure, Category = "Voice Plug-in")
-		bool GetRoomStatus();
+		bool GetRoomStatus() const;
 
 	/**
 	 * Set VoiceEngine AppInfo.

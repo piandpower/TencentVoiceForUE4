@@ -41,12 +41,20 @@ UVoiceClient * UVoiceClient::GetVoiceClient()
 	return VoiceClient;
 }
 
+bool UVoiceClient::GetRoomStatus() const
+{
+	return bRoomStatus;
+}
+
 void UVoiceClient::AddJoinedRoomName(const FString & RoomName)
 {
 	if (JoinedRoomName.Num() == 0)
 	{
 		OpenMic();
 		OpenSpeaker();
+
+		SetMicVolume((int)(0xffff * 0.5));
+		SetSpeakerVolume((int)(0xffff * 0.5));
 	}
 
 	if (!JoinedRoomName.Contains(RoomName))
@@ -73,11 +81,6 @@ void UVoiceClient::RemoveJoinedRoomName(const FString & RoomName)
 
 		bRoomStatus = false;
 	}
-}
-
-bool UVoiceClient::GetRoomStatus()
-{
-	return bRoomStatus;
 }
 
 bool UVoiceClient::SetAppInfo(const FString& appID, const FString& appKey, const FString& OpenID)
@@ -190,12 +193,12 @@ bool UVoiceClient::EnableMultiRoom(bool bEnable)
 
 void UVoiceClient::SetMicVolume(int vol)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("SetMicVolume return code %d!"), static_cast<int32>(m_voiceengine->SetMicVolume(vol)));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("SetMicVolume %d, return code %d!"), vol, static_cast<int32>(m_voiceengine->SetMicVolume(vol)));
 }
 
 void UVoiceClient::SetSpeakerVolume(int vol)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("SetSpeakerVolume return code %d!"), static_cast<int32>(m_voiceengine->SetSpeakerVolume(vol)));
+	UE_LOG(TencentVoicePlugin, Display, TEXT("SetSpeakerVolume %d, return code %d!"), vol, static_cast<int32>(m_voiceengine->SetSpeakerVolume(vol)));
 }
 
 void UVoiceClient::QuitRoom(const FString & RoomName, int32 msTimeout)

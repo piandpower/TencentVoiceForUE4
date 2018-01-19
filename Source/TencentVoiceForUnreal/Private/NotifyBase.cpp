@@ -29,9 +29,7 @@ void UNotifyBase::OnJoinRoom(GCloudVoiceCompleteCode code, const char *roomName,
 			TCallback->ExecuteIfBound();
 		}
 	}
-	/**
-	 * If the first voice room joins failed, and then turn off voice client tick.
-	 */
+	// If the first voice room joins failed, and then turn off voice client tick.
 	else
 	{
 		VoiceClient->RemoveJoinedRoomName(FString(ANSI_TO_TCHAR(roomName)));
@@ -55,19 +53,19 @@ void UNotifyBase::OnQuitRoom(GCloudVoiceCompleteCode code, const char *roomName)
 
 	if (gcloud_voice::GV_ON_QUITROOM_SUCC == code)
 	{
-		VoiceClient->RemoveJoinedRoomName(FString(ANSI_TO_TCHAR(roomName)));
-
 		FEventCallback *TCallback = CallbackMap.Find(EFunctionName::EOnQuitRoom);
 		if (nullptr != TCallback)
 		{
 			TCallback->ExecuteIfBound();
 		}
+
+		VoiceClient->RemoveJoinedRoomName(FString(ANSI_TO_TCHAR(roomName)));
 	}
 }
 
 void UNotifyBase::OnMemberVoice(const char *roomName, unsigned int member, int status)
 {
-	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnMemberVoice report member:%d with status:%d in room:%s"), *(this->GetName()), static_cast<int32>(member), static_cast<int32>(status), *roomName);
+	UE_LOG(TencentVoicePlugin, Display, TEXT("%s OnMemberVoice report member:%d with status:%d in room:%s"), *(this->GetName()), static_cast<int32>(member), static_cast<int32>(status), *FString(ANSI_TO_TCHAR(roomName)));
 
 	FEventCallback *TCallback = CallbackMap.Find(EFunctionName::EOnMemberVoice);
 	if (nullptr != TCallback)
