@@ -190,7 +190,7 @@ public:
 	/**
 	 * Set voice client Mic volume
 	 *
-	 * @param vol The SDK document does not mention this parameter.
+	 * @param vol Windows value range[0,8000].
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Voice Plug-in")
 		void SetMicVolume(int vol);

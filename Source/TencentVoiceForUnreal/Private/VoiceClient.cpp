@@ -53,8 +53,8 @@ void UVoiceClient::AddJoinedRoomName(const FString & RoomName)
 		OpenMic();
 		OpenSpeaker();
 
-		SetMicVolume((int)(0xffff * 0.5));
-		SetSpeakerVolume((int)(0xffff * 0.5));
+		SetMicVolume((int)(8000));
+		SetSpeakerVolume((int)(0xffff));
 	}
 
 	if (!JoinedRoomName.Contains(RoomName))
